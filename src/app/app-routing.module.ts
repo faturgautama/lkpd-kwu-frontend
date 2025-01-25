@@ -4,6 +4,10 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
     {
         path: '',
+        loadComponent: async () => (await import('./pages/authentication/authentication.component')).AuthenticationComponent,
+    },
+    {
+        path: 'beranda',
         loadComponent: async () => (await import('./pages/beranda/beranda.component')).BerandaComponent,
     }
 ];

@@ -20,34 +20,41 @@ p {
 }
 
 .p-inputtext-sm .p-inputtext {
+  font-family: "Nunito", sans-serif !important;
   width: 100% !important;
   font-size: 14px !important;
 }
 
 .p-inputtext-sm.text-end .p-inputtext {
+  font-family: "Nunito", sans-serif !important;
   width: 100% !important;
   font-size: 14px !important;
   text-align: right !important;
 }
 
 .p-inputtext-sm .p-inputnumber {
+  font-family: "Nunito", sans-serif !important;
   width: 100% !important;
 }
 
 p-inputnumber,
 .p-inputnumber {
+  font-family: "Nunito", sans-serif !important;
   width: 100% !important;
 }
 
 .p-dropdown {
+  font-family: "Nunito", sans-serif !important;
   width: 100% !important;
 }
 
 .p-dropdown-item {
+  font-family: "Nunito", sans-serif !important;
   font-size: 14px !important;
 }
 
 .p-dropdown-filter {
+  font-family: "Nunito", sans-serif !important;
   padding: 10px !important;
   font-size: 14px !important;
 }
@@ -96,19 +103,23 @@ p-inputnumber,
 }
 
 .p-datepicker table td {
+  font-family: "Nunito", sans-serif !important;
   padding: 0.5rem !important;
 }
 
 .p-datepicker table td > span {
+  font-family: "Nunito", sans-serif !important;
   width: 20px !important;
   height: 20px !important;
 }
 
 .p-tabview-panels {
+  font-family: "Nunito", sans-serif !important;
   padding: 10px 0px !important;
 }
 
 .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  font-family: "Nunito", sans-serif !important;
   border-color: #60a5fa !important;
   color: #60a5fa !important;
 }
@@ -120,7 +131,7 @@ p-inputnumber,
 .p-tabview-title {
   font-size: 14px !important;
   font-weight: 500 !important;
-  font-family: "Poppins", sans-serif !important;
+  font-family: "Nunito", sans-serif !important;
 }
 
 .p-multiselect-label {
@@ -129,6 +140,7 @@ p-inputnumber,
 }
 
 .p-inputtextarea {
+  font-family: "Nunito", sans-serif !important;
   font-size: 14px !important;
 }
 
@@ -142,9 +154,15 @@ p-inputnumber,
   width: 120px !important;
 }
 
+button {
+  font-family: "Nunito", sans-serif !important;
+}
+
 input,
 textarea {
+  font-family: "Nunito", sans-serif !important;
   font-size: 14px !important;
+  width: 100% !important;
 }
 
 /* width */

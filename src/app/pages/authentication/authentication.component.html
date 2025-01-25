@@ -1,0 +1,112 @@
+<app-main>
+    <div class="flex flex-col w-full relative">
+        <!-- Header -->
+        <div class="flex flex-col w-full h-[50%] bg-emerald-500 px-5 py-20 ">
+            <p class="text-gray-50 text-6xl font-extrabold text-center">
+                LKPD
+            </p>
+            <p class="text-emerald-100 text-lg text-center">
+                Lembar Kerja Peserta Didik
+            </p>
+        </div>
+
+        <!-- Form -->
+        <div [formGroup]="Form"
+            class="flex flex-col rounded-xl shadow bg-white p-5 fixed {{ IsRegister ? 'top-[220px]' : 'top-[250px]' }}"
+            style="width: calc(100vw - 3rem); left: 50%; transform: translateX(-50%);">
+
+            <!-- Header -->
+            <div class="flex flex-col w-full pb-3 mb-3 border-b border-dashed border-gray-400 border-t-0 border-x-0">
+                <p class="text-2xl font-extrabold text-gray-700">
+                    {{ IsRegister ? 'Register' : 'Sign In' }}
+                </p>
+
+                <p class="text-sm text-gray-600">
+                    {{ IsRegister ? 'Daftarkan' :'Masuk ke'}} akun anda
+                </p>
+            </div>
+
+            <!-- Toggle -->
+            <div class="grid grid-cols-2 w-full gap-3 mb-4">
+                <div class="grid w-full">
+                    <p-button styleClass="p-button-sm" severity="secondary"
+                        [styleClass]="IsGuru ? 'bg-emerald-500 text-white text-sm' : 'secondary text-sm'"
+                        label="Saya Adalah Guru" (onClick)="handleToggleIsGuru(true)">
+                    </p-button>
+                </div>
+
+                <div class="grid w-full">
+                    <p-button styleClass="p-button-sm" severity="secondary"
+                        [styleClass]="!IsGuru ? 'bg-emerald-500 text-white text-sm' : 'secondary text-sm'"
+                        label="Saya Adalah Siswa" (onClick)="handleToggleIsGuru(false)">
+                    </p-button>
+                </div>
+            </div>
+
+            <!-- Nama Lengkap -->
+            <div *ngIf="IsRegister" class="flex flex-col gap-1 w-full mb-4">
+                <p class="text-base text-gray-700 font-medium">
+                    Nama Lengkap
+                </p>
+                <input pInputText class="w-full" placeholder="Masukkan nama lengkap anda disini"
+                    formControlName="nama_lengkap">
+            </div>
+
+            <!-- Email -->
+            <div class="flex flex-col gap-1 w-full mb-4">
+                <p class="text-base text-gray-700 font-medium">
+                    Email
+                </p>
+                <input pInputText class="w-full" placeholder="Masukkan email anda disini" formControlName="email">
+            </div>
+
+            <!-- Password -->
+            <div class="flex flex-col gap-1 w-full mb-8">
+                <p class="text-base text-gray-700 font-medium">
+                    Password
+                </p>
+                <p-password styleClass="w-full" [feedback]="false" placeholder="Masukkan password anda disini"
+                    [toggleMask]="true" formControlName="password">
+                </p-password>
+            </div>
+
+            <div *ngIf="!IsRegister" class="grid w-full mb-3">
+                <p-button [disabled]="Form.get('email')?.invalid && Form.get('password')?.invalid" styleClass="w-full"
+                    severity="info" label="Sign In" (onClick)="handleSignIn(Form.value)">
+                </p-button>
+            </div>
+
+            <div *ngIf="IsRegister" class="grid w-full mb-3">
+                <p-button [disabled]="Form.invalid" styleClass="w-full" severity="info" label="Register"
+                    (onClick)="handleRegister(Form.value)">
+                </p-button>
+            </div>
+
+            <p *ngIf="!IsRegister" class="text-sm text-gray-700 font-medium text-center" (click)="IsRegister = true">
+                Belum Memiliki Akun?
+                <span class="text-emerald-500 cursor-pointer">
+                    Register Disini
+                </span>
+            </p>
+
+            <p *ngIf="IsRegister" class="text-sm text-gray-700 font-medium text-center" (click)="IsRegister = false">
+                Sudah Memiliki Akun?
+                <span class="text-emerald-500 cursor-pointer">
+                    Sign In Disini
+                </span>
+            </p>
+        </div>
+
+        <div class="bg-gray-200 flex flex-col w-full justify-end items-center h-[50%]">
+            <p class="text-gray-700 text-base text-center">
+                <span class="font-semibold">Ardiana Trisya Rahadiva</span>
+            </p>
+            <p class="text-gray-700 text-base text-center">
+                Fakultas Ekonomi dan Bisnis
+            </p>
+            <p class="text-gray-700 text-base text-center mb-10">
+                Universitas Negeri Semarang
+            </p>
+        </div>
+    </div>
+</app-main>
