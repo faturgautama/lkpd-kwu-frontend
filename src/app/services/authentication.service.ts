@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpOperationService } from './http-operation.service';
 import { AuthenticationModel } from '../model/authentication.model';
 import { environment } from 'src/environments/environment';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthenticationService {
+
+    Profile$ = new BehaviorSubject<any>(null);
 
     constructor(
         private _httpOperationService: HttpOperationService,
@@ -20,6 +22,18 @@ export class AuthenticationService {
                 tap((result) => {
                     if (result.status) {
                         this.handleSignIn(result.data);
+                    }
+                })
+            )
+    }
+
+    getProfile() {
+        return this._httpOperationService
+            .getRequest(`${environment.apiUrl}/authentication/profile`)
+            .pipe(
+                tap((result) => {
+                    if (result.status) {
+                        this.Profile$.next(result.data);
                     }
                 })
             )

@@ -1,6 +1,26 @@
-<div class="flex items-center justify-center w-full h-screen bg-gray-800">
+<div class="flex flex-col items-center justify-center w-full h-screen bg-gray-800">
+    <!-- Navbar -->
+    @if (!IsAuthenticationPage) {
+    <div class="flex w-full">
+        <app-navbar></app-navbar>
+    </div>
+    }
+
     <!-- Container -->
     <div class="flex w-full md:max-w-[480px] md:w-[480px] h-full overflow-x-auto bg-gray-50">
         <ng-content></ng-content>
     </div>
+
+    @if (!IsAuthenticationPage) {
+    <div class="flex w-full">
+        <div class="bg-gray-300 flex flex-col w-full justify-end items-center p-2">
+            <p class="text-gray-700 text-sm text-center">
+                <span class="font-semibold">Ardiana Trisya Rahadiva</span>
+            </p>
+            <p class="text-gray-700 text-sm text-center">
+                FEB - UNNES
+            </p>
+        </div>
+    </div>
+    }
 </div>
