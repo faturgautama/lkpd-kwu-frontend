@@ -1,5 +1,36 @@
 <app-main>
-    <div class="grid w-full p-3">
-        <p>beranda works!</p>
+    <div class="grid w-full py-5 px-3">
+        <!-- Banner -->
+        <div class="flex flex-col w-full items-center justify-center rounded-lg bg-emerald-500 p-5 shadow mb-5">
+            <p class="text-sm font-medium text-gray-100 text-center">
+                Selamat Datang di
+            </p>
+            <p class="text-lg font-bold text-white text-center">
+                LKPD - Lembar Kerja Peserta Didik
+            </p>
+        </div>
+
+        <!-- Title -->
+        <div class="flex flex-col w-full mb-5">
+            <p class="text-lg font-semibold text-gray-700">
+                Daftar Menu
+            </p>
+            <p class="text-sm text-gray-600">
+                Pilih menu dibawah ini
+            </p>
+        </div>
+
+        <!-- Menu -->
+        <div class="grid grid-cols-2 justify-center items-center gap-5">
+            @for (item of Menu; track $index) {
+            <div class="flex flex-col bg-emerald-100 p-5 rounded-lg shadow cursor-pointer items-center justify-center gap-2"
+                (click)="handleNavigateMenu(item.url)">
+                <i class="{{item.icon}} text-emerald-500" style="font-size: 30px;"></i>
+                <p class="text-xl text-emerald-500 font-extrabold">
+                    {{ item.title }}
+                </p>
+            </div>
+            }
+        </div>
     </div>
 </app-main>
