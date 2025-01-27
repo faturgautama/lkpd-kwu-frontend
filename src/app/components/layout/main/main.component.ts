@@ -37,7 +37,7 @@ export class MainComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         const url = this._router.url;
 
-        if (url != '/') {
+        if (url != '/' && !this._authenticationService.Profile$.value) {
             this._authenticationService
                 .getProfile()
                 .pipe(takeUntil(this.Destroy$))

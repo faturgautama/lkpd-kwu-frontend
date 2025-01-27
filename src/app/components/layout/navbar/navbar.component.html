@@ -1,4 +1,4 @@
-<div class="flex p-3 w-[100vw] bg-emerald-500 gap-3 items-center">
+<div class="flex p-3 w-[100vw] bg-emerald-500 gap-0 items-center">
     @if (!IsBerandaPage) {
     <span class="text-white mr-3 cursor-pointer" (click)="handleBackToBeranda()">
         <i class="pi pi-chevron-left"></i>
@@ -10,8 +10,8 @@
     </p>
 
     <div *ngIf="Profile$ | async as profile" class="flex flex-row items-center gap-2 ml-auto">
-        <p class="text-white text-base">
-            <i class="pi pi-user"></i>&nbsp;
+        <p class="text-white text-sm">
+            <i class="pi pi-user" style="font-size: 12px"></i>&nbsp;
             {{ profile.nama_lengkap }}
         </p>
     </div>

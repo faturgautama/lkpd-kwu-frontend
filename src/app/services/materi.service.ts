@@ -17,7 +17,7 @@ export class MateriService {
         return this._httpOperationService.getRequest(`${environment.apiUrl}/materi`, query);
     }
 
-    getById(id_materi: any): Observable<MateriModel.GetAllMateri> {
+    getById(id_materi: any): Observable<MateriModel.GetByIdMateri> {
         return this._httpOperationService.getRequest(`${environment.apiUrl}/materi/retrieve/${id_materi}`);
     }
 
@@ -30,6 +30,6 @@ export class MateriService {
     }
 
     delete(id_materi: any): Observable<HttpBaseResponse> {
-        return this._httpOperationService.deleteRequest(`${environment.apiUrl}/materi/${id_materi}`);
+        return this._httpOperationService.deleteRequest(`${environment.apiUrl}/materi/delete/${id_materi}`);
     }
 }
