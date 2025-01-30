@@ -24,7 +24,7 @@ export class KuisService {
             )
     }
 
-    getById(id_kuis: any): Observable<KuisModel.GetAllKuis> {
+    getById(id_kuis: any): Observable<KuisModel.GetByIdKuis> {
         return this._httpOperationService.getRequest(`${environment.apiUrl}/kuis/retrieve/${id_kuis}`);
     }
 
@@ -56,6 +56,6 @@ export class KuisService {
     }
 
     submitJawaban(data: KuisModel.CreateJawabanKuis): Observable<HttpBaseResponse> {
-        return this._httpOperationService.postRequest(`${environment.apiUrl}/kuis/insert-pertanyaan`, data);
+        return this._httpOperationService.postRequest(`${environment.apiUrl}/kuis/insert-jawaban`, data);
     }
 }

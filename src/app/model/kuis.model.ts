@@ -13,11 +13,13 @@ export namespace KuisModel {
         update_at: Date;
         update_by: number;
         is_active: boolean;
+        is_answered?: boolean;
+        skor?: number
     }
 
     export interface IPertanyaanKuis {
-        id_kuis: number;
-        id_pertanyaan: number;
+        id_kuis?: number;
+        id_pertanyaan?: number;
         pertanyaan: string;
         option_a: string;
         option_b: string;
@@ -25,8 +27,8 @@ export namespace KuisModel {
         option_d: string;
         option_e: string;
         correct: string;
-        create_at: Date;
-        create_by: number;
+        create_at?: Date;
+        create_by?: number;
     }
 
     export interface IJawabanKuis {

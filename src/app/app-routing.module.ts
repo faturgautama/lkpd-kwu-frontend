@@ -16,6 +16,26 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         path: 'materi',
         loadComponent: async () => (await import('./pages/materi/materi.component')).MateriComponent,
+    },
+    {
+        canActivate: [AuthGuard],
+        path: 'proyek',
+        loadComponent: async () => (await import('./pages/proyek/proyek.component')).ProyekComponent,
+    },
+    {
+        canActivate: [AuthGuard],
+        path: 'kuis',
+        loadComponent: async () => (await import('./pages/kuis/kuis.component')).KuisComponent,
+    },
+    {
+        canActivate: [AuthGuard],
+        path: 'nilai',
+        loadComponent: async () => (await import('./pages/nilai/nilai.component')).NilaiComponent,
+    },
+    {
+        canActivate: [AuthGuard],
+        path: 'profile',
+        loadComponent: async () => (await import('./pages/profile/profile.component')).ProfileComponent,
     }
 ];
 
