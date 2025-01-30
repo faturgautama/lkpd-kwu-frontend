@@ -24,7 +24,7 @@ export class ProyekService {
             )
     }
 
-    getById(id_proyek: any): Observable<ProyekModel.GetAllProyek> {
+    getById(id_proyek: any): Observable<ProyekModel.GetByIdProyek> {
         return this._httpOperationService.getRequest(`${environment.apiUrl}/proyek/retrieve/${id_proyek}`);
     }
 
@@ -36,8 +36,23 @@ export class ProyekService {
         return this._httpOperationService.putRequest(`${environment.apiUrl}/proyek`, data);
     }
 
+    delete(data: ProyekModel.UpdateProyek): Observable<HttpBaseResponse> {
+        return this._httpOperationService.putRequest(`${environment.apiUrl}/proyek`, {
+            ...data,
+            is_active: false
+        });
+    }
+
     updateNilaiKelompok(data: ProyekModel.UpdateNilaiProyekKelompok): Observable<HttpBaseResponse> {
         return this._httpOperationService.putRequest(`${environment.apiUrl}/proyek/update-nilai-kelompok`, data);
+    }
+
+    createNewKelompok(data: ProyekModel.CreateNewProyekKelompok): Observable<HttpBaseResponse> {
+        return this._httpOperationService.postRequest(`${environment.apiUrl}/proyek/add-kelompok`, data);
+    }
+
+    getDetailKelompok(id_siswa: number, id_proyek: number): Observable<HttpBaseResponse> {
+        return this._httpOperationService.getRequest(`${environment.apiUrl}/proyek/detail-kelompok/${id_siswa}/${id_proyek}`);
     }
 
     updateHasilKelompok(data: ProyekModel.UpdateProyekKelompok): Observable<HttpBaseResponse> {
@@ -48,7 +63,11 @@ export class ProyekService {
         return this._httpOperationService.deleteRequest(`${environment.apiUrl}/proyek/delete-kelompok/${id_kelompok_proyek}`);
     }
 
-    createSiswaKelompok(data: ProyekModel.CreateProyekSiswaKelompok): Observable<HttpBaseResponse> {
+    getSiswaForKelompok(id_kelas: any, id_proyek: any): Observable<ProyekModel.GetAllProyek> {
+        return this._httpOperationService.getRequest(`${environment.apiUrl}/proyek/siswa-kelompok/${id_kelas}/${id_proyek}`);
+    }
+
+    createSiswaKelompok(data: ProyekModel.CreateNewProyekSiswaKelompok): Observable<HttpBaseResponse> {
         return this._httpOperationService.postRequest(`${environment.apiUrl}/proyek/add-siswa-kelompok`, data);
     }
 

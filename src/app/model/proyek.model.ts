@@ -47,7 +47,7 @@ export namespace ProyekModel {
         create_at: Date;
         create_by: number;
         is_active: boolean;
-        kelompok: IKelompokProyek[]
+        kelompok_proyek: IKelompokProyek[]
     }
 
     export interface IProyekQueryParams {
@@ -67,6 +67,12 @@ export namespace ProyekModel {
         status!: boolean;
         message!: string;
         data!: IProyekWithDetail;
+    }
+
+    export interface CreateNewProyekKelompok {
+        id_proyek: number;
+        kelompok_proyek: string;
+        detail_siswa: CreateProyekSiswaKelompok[]
     }
 
     export interface CreateProyekKelompok {

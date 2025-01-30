@@ -1,1 +1,432 @@
-<p>proyek works!</p>
+<app-main>
+    <div class="grid w-full py-5 px-3">
+        <!-- Banner -->
+        <div class="flex flex-col w-full items-center justify-center rounded-lg bg-emerald-500 p-5 shadow mb-5">
+            <p class="text-sm font-medium text-gray-100 text-center">
+                LKPD - Lembar Kerja Peserta Didik
+            </p>
+            <p class="text-lg font-bold text-white text-center">
+                Proyek
+            </p>
+        </div>
+
+        <div class="flex flex-row justify-between w-full items-center mb-5">
+            <!-- Title -->
+            <div *ngIf="!IsShowHasil" class="flex flex-col w-full ">
+                <p class="text-lg font-semibold text-gray-700">
+                    {{ IsShowForm ? 'Tambah / Edit' : 'Daftar'}} Proyek
+                </p>
+                <p class="text-sm text-gray-600">
+                    {{ IsShowForm ? 'Tambahkan / edit' : 'Pilih'}} proyek dibawah ini
+                </p>
+            </div>
+
+            <div *ngIf="IsShowHasil && IsGuru" class="flex flex-col w-full ">
+                <p class="text-lg font-semibold text-gray-700">
+                    Hasil Proyek
+                </p>
+                <p class="text-sm text-gray-600">
+                    Pilih kelompok proyek untuk melihat hasil
+                </p>
+            </div>
+
+            <div *ngIf="IsShowHasil && !IsGuru" class="flex flex-col w-full ">
+                <p class="text-lg font-semibold text-gray-700">
+                    Hasil Proyek
+                </p>
+                <p class="text-sm text-gray-600">
+                    Tambah atau edit hasil proyek kelompok anda disini
+                </p>
+            </div>
+
+            @if (IsGuru && !IsShowForm) {
+            <p-button severity="secondary" styleClass="p-button-sm bg-emerald-500 text-sm text-white" label="Tambah"
+                (onClick)="IsShowForm = true; Form.reset(); Kelompok = []; Siswa = []; IsFormEdit = false">
+            </p-button>
+            }
+        </div>
+
+        <!-- List -->
+        <div *ngIf="!IsShowForm" class="flex flex-col gap-3 w-full">
+            @for (item of Proyek; track $index) {
+            <div
+                class="flex flex-row justify-between items-center w-full p-3 rounded-lg border border-dashed border-gray-300">
+                <div class="flex flex-col">
+                    <p class="text-lg text-emerald-500 font-bold">
+                        {{ item.judul }}
+                    </p>
+                    <p class="text-base text-gray-700 font-semibold mb-1">
+                        Kelas {{ item.kelas }}
+                    </p>
+                    <p class="text-sm text-gray-600 mb-2">
+                        {{ item.create_at | date: 'dd-MM-yyyy HH:mm' }}
+                    </p>
+
+                    <div *ngIf="IsGuru"
+                        class="flex w-[5.5rem] items-center justify-center px-2 py-1 bg-sky-100 text-sky-600 rounded-lg mb-1"
+                        (click)="handleLihatHasil(item.id_proyek)">
+                        <p class="font-semibold text-xs">
+                            Lihat Hasil
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex gap-5 items-center">
+                    <span *ngIf="IsGuru" class="text-yellow-500" (click)="handleClickButtonEdit(item.id_proyek)">
+                        <i class="pi pi-pencil"></i>
+                    </span>
+
+                    <span *ngIf="IsGuru" class="text-red-500" (click)="handleDeleteProyek(item)">
+                        <i class="pi pi-trash"></i>
+                    </span>
+
+                    <span *ngIf="!IsGuru" class="text-yellow-500" (click)="handleLihatHasil(item.id_proyek)">
+                        <i class="pi pi-file-edit"></i>
+                    </span>
+                </div>
+            </div>
+            }
+        </div>
+
+        <!-- Form -->
+        <div *ngIf="IsShowForm && IsGuru && !IsShowHasil" class="flex flex-col gap-0 w-full">
+            <!-- Header -->
+            <div class="flex flex-col gap-3 w-full mb-4 pb-4 border-b border-t-0 border-x-0 border-dashed border-gray-300"
+                [formGroup]="Form">
+                <!-- Judul -->
+                <div class="flex flex-col gap-1 w-full">
+                    <p class="text-base font-medium text-gray-700">
+                        Judul Proyek
+                        <span class="text-red-500">*</span>
+                    </p>
+                    <input type="text" pInputText class="w-full" placeholder="Masukkan judul proyek disini"
+                        formControlName="judul">
+
+                    <span *ngIf="Form.get('judul')?.touched && Form.get('judul')?.invalid"
+                        class="p-2 rounded-lg bg-red-100 text-red-500 font-semibold text-sm">
+                        Judul proyek tidak boleh kosong
+                    </span>
+                </div>
+
+                <!-- Kelas -->
+                <div class="flex flex-col gap-1 w-full">
+                    <p class="text-base font-medium text-gray-700">
+                        Untuk Kelas
+                        <span class="text-red-500">*</span>
+                    </p>
+                    <p-dropdown [options]="KelasDatasource" optionValue="id_kelas" optionLabel="kelas"
+                        placeholder="Pilih kelas disini" formControlName="id_kelas" styleClass="w-full" appendTo="body"
+                        [filter]="true" (onChange)="handleChangeKelas($event)">
+                    </p-dropdown>
+
+                    <span *ngIf="Form.get('id_kelas')?.touched && Form.get('id_kelas')?.invalid"
+                        class="p-2 rounded-lg bg-red-100 text-red-500 font-semibold text-sm">
+                        Kelas tidak boleh kosong
+                    </span>
+                </div>
+
+                <!-- Deskripsi Proyek -->
+                <div class="flex flex-col gap-1 w-full">
+                    <p class="text-base font-medium text-gray-700">
+                        Deskripsi Proyek
+                        <span class="text-red-500">*</span>
+                    </p>
+
+                    <textarea rows="3" class="w-full" pInputTextarea placeholder="Masukkan deskripsi proyek disini"
+                        formControlName="deskripsi"></textarea>
+
+                    <span *ngIf="Form.get('deskripsi')?.touched && Form.get('deskripsi')?.invalid"
+                        class="p-2 rounded-lg bg-red-100 text-red-500 font-semibold text-sm">
+                        Deskripsi proyek tidak boleh kosong
+                    </span>
+                </div>
+
+                <div *ngIf="IsFormEdit" class="flex flex-row justify-end">
+                    <p-button severity="secondary" label="Update Proyek"
+                        styleClass="p-button-sm bg-emerald-500 text-white text-sm"
+                        (onClick)="handleUpdateProyek(Form.value)">
+                    </p-button>
+                </div>
+            </div>
+
+            <!-- Kelompok -->
+            <div class="flex flex-col gap-3 w-full mb-4">
+                <!-- Title -->
+                <div class="flex flex-col w-full ">
+                    <p class="text-lg font-semibold text-gray-700">
+                        Kelompok Proyek
+                    </p>
+                    <p class="text-sm text-gray-600">
+                        Tambah / edit kelompok proyek disini
+                    </p>
+                </div>
+
+                <!-- Loop -->
+                <div *ngFor="let item of Kelompok; let i = index; let last = last"
+                    class="flex flex-col w-full gap-1 {{last ? '' : 'pb-3 border-b border-t-0 border-x-0 border-solid border-gray-500'}}">
+                    <p class="text-gray-800 text-base font-medium">
+                        No. {{ i + 1 }}
+                    </p>
+
+                    <!-- Kelompok -->
+                    <div class="flex flex-col gap-1 w-full mb-3">
+                        <p class="text-base font-medium text-gray-700">
+                            Nama Kelompok
+                            <span class="text-red-500">*</span>
+                        </p>
+                        <input type="text" pInputText class="w-full" placeholder="Masukkan nama kelompok disini"
+                            [(ngModel)]="item.kelompok_proyek">
+                    </div>
+
+                    <div *ngIf="IsFormEdit && item.id_kelompok_proyek" class="flex flex-row justify-end gap-3 mb-4">
+                        <p-button severity="danger" label="Delete Kelompok" styleClass="p-button-sm text-sm"
+                            (onClick)="handleDeleteKelompok(item)">
+                        </p-button>
+
+                        <p-button severity="secondary" label="Update Kelompok"
+                            styleClass="p-button-sm bg-emerald-500 text-white text-sm"
+                            (onClick)="handleUpdateKelompok(item)">
+                        </p-button>
+                    </div>
+
+                    <!-- Siswa -->
+                    <div class="flex flex-col w-full gap-2 p-3 border rounded-lg border-dashed border-gray-400 mb-3">
+                        <!-- Loop -->
+                        <div *ngFor="let siswa of item.detail_siswa; let index_siswa = index; let last = last"
+                            class="flex flex-row items-end w-full gap-3 {{last ? '' : 'pb-2 border-b border-t-0 border-x-0 border-dashed border-gray-300'}}">
+                            <!-- Dropdown-->
+                            <div class="flex flex-col gap-1 w-10/12">
+                                <p class="text-base font-medium text-gray-700">
+                                    Nama Siswa
+                                    <span class="text-red-500">*</span>
+                                </p>
+                                <p-dropdown [options]="Siswa" optionLabel="nama_lengkap" optionValue="id"
+                                    [(ngModel)]="siswa.id" [filter]="true" placeholder="Pilih siswa disini"
+                                    styleClass="p-inputtext-sm w-full"
+                                    (onChange)="handleChangeSiswa($event, index_siswa, i)">
+                                    <ng-template let-data pTemplate="item">
+                                        <div class="flex flex-col gap-1">
+                                            <p class="text-base font-bold text-gray-700">
+                                                {{ data.nama_lengkap }}
+                                            </p>
+                                            <p class="text-sm font-medium text-gray-600">
+                                                {{ data.kelompok_proyek
+                                                ? data.kelompok_proyek
+                                                : 'Kelompok Belum Terdaftar' }}
+                                            </p>
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </div>
+
+                            <!-- Action -->
+                            <div class="flex flex-row items-center justify-end gap-4 pb-1 w-2/12">
+                                <span class="cursor-pointer text-red-500"
+                                    (click)="handleDeleteSiswa(siswa, index_siswa, i)">
+                                    <i class="pi pi-trash"></i>
+                                </span>
+
+                                <span *ngIf="IsFormEdit && siswa.id_siswa_kelompok_proyek"
+                                    class=" cursor-pointer text-sky-500" (click)="handleSaveSiswa(siswa, item)">
+                                    <i class="pi pi-save"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="grid w-full">
+                            <p-button [disabled]="!item.kelompok_proyek" severity="secondary"
+                                styleClass="p-button-sm bg-emerald-500 text-sm text-white w-full" label="Tambah Siswa"
+                                (onClick)="handleAddSiswaKelompok(i)">
+                            </p-button>
+                        </div>
+                    </div>
+
+                    <div *ngIf="IsFormEdit && !item.id_kelompok_proyek" class="flex flex-row justify-end gap-3 mb-3">
+                        <p-button severity="secondary" label="Simpan Kelompok"
+                            styleClass="p-button-sm bg-emerald-500 text-white text-sm"
+                            (onClick)="handleSaveKelompok(item)">
+                        </p-button>
+                    </div>
+                </div>
+
+                <div class="grid w-full">
+                    <p-button [disabled]="Form.invalid" severity="secondary"
+                        styleClass="p-button-sm bg-emerald-500 text-sm text-white w-full" label="Tambah Kelompok Baru"
+                        (onClick)="handleAddKelompok()">
+                    </p-button>
+                </div>
+            </div>
+
+            <div class="flex flex-row justify-end items-center gap-3 w-full">
+                <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
+                    (onClick)="IsShowForm = false; Form.reset()">
+                </p-button>
+
+                <p-button *ngIf="!IsFormEdit" severity="secondary" label="Simpan"
+                    styleClass="p-button-sm bg-emerald-500 text-white text-sm" (onClick)="handleSaveProyek(Form.value)">
+                </p-button>
+            </div>
+        </div>
+
+        <!-- Hasil -->
+        <div *ngIf="IsShowForm && IsShowHasil" class="flex flex-col gap-0 w-full">
+            <!-- Header -->
+            <div
+                class="flex flex-col gap-2 w-full mb-4 pb-4 border-b border-t-0 border-x-0 border-dashed border-gray-300">
+                <!-- Judul -->
+                <div class="flex flex-row gap-1 w-full">
+                    <div class="w-4/12">
+                        <p class="text-base font-medium text-gray-700">
+                            Judul Proyek
+                        </p>
+                    </div>
+                    <div class="w-8/12">
+                        <p class="text-base font-bold text-gray-700">
+                            : {{ SelectedProyek.judul }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Kelas -->
+                <div class="flex flex-row gap-1 w-full">
+                    <div class="w-4/12">
+                        <p class="text-base font-medium text-gray-700">
+                            Kelas
+                        </p>
+                    </div>
+                    <div class="w-8/12">
+                        <p class="text-base font-bold text-gray-700">
+                            : {{ SelectedProyek.kelas.kelas }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Deskripsi -->
+                <div class="flex flex-row gap-1 w-full">
+                    <div class="w-4/12">
+                        <p class="text-base font-medium text-gray-700">
+                            Deskripsi
+                        </p>
+                    </div>
+                    <div class="w-8/12">
+                        <p class="text-base font-bold text-gray-700">
+                            : {{ SelectedProyek.deskripsi }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dropodwn Kelompok -->
+            <div *ngIf="IsGuru" class="flex flex-col gap-1 w-full mb-3">
+                <p class="text-base font-medium text-gray-700">
+                    Pilih Kelompok
+                </p>
+                <p-dropdown [options]="Kelompok" optionLabel="kelompok_proyek" [filter]="true"
+                    styleClass="p-inputtext-sm w-full" (onChange)="handleChangeHasilKelompok($event)">
+                </p-dropdown>
+            </div>
+
+
+            @if(Hasil) {
+            <p class="text-base font-semibold text-gray-700">
+                Daftar Siswa
+            </p>
+
+            <!-- Daftar Siswa -->
+            <div *ngFor="let item of Hasil.detail_siswa" class="flex flex-row gap-1 w-full p-3 mb-3">
+                <p class="text-sm text-gray-700">
+                    {{ item.no_absen }} - {{ item.nama_lengkap }}
+                </p>
+            </div>
+
+            @if(IsGuru) {
+            <p class="text-base font-semibold text-gray-700">
+                Hasil
+            </p>
+
+            <div class="flex flex-row gap-1 w-full p-3 mb-3">
+                <p class="text-sm text-gray-700" [innerHTML]="Hasil.hasil"></p>
+            </div>
+
+            <p class="text-base font-semibold text-gray-700">
+                Input Nilai
+            </p>
+
+            <div class="flex flex-col gap-3 p-3 mb-3">
+                <!-- Nilai Pertemuan 1 -->
+                <div class="flex flex-col gap-1">
+                    <p class="text-sm text-gray-700 font-medium">
+                        Nilai Pertemuan 1
+                    </p>
+                    <p-inputNumber styleClass="p-inputtext-sm w-full" [(ngModel)]="Hasil.nilai_pertemuan_1" [max]="100"
+                        mode="decimal" [minFractionDigits]="2">
+                    </p-inputNumber>
+                </div>
+
+                <!-- Nilai Pertemuan 2 -->
+                <div class="flex flex-col gap-1">
+                    <p class="text-sm text-gray-700 font-medium">
+                        Nilai Pertemuan 2
+                    </p>
+                    <p-inputNumber styleClass="p-inputtext-sm w-full" [(ngModel)]="Hasil.nilai_pertemuan_2" [max]="100"
+                        mode="decimal" [minFractionDigits]="2">
+                    </p-inputNumber>
+                </div>
+
+                <!-- Nilai Pertemuan 3 -->
+                <div class="flex flex-col gap-1">
+                    <p class="text-sm text-gray-700 font-medium">
+                        Nilai Pertemuan 3
+                    </p>
+                    <p-inputNumber styleClass="p-inputtext-sm w-full" [(ngModel)]="Hasil.nilai_pertemuan_3" [max]="100"
+                        mode="decimal" [minFractionDigits]="2">
+                    </p-inputNumber>
+                </div>
+
+                <!-- Nilai Pertemuan 3 -->
+                <div class="flex flex-col gap-1">
+                    <p class="text-sm text-gray-700 font-medium">
+                        Nilai Pertemuan 4
+                    </p>
+                    <p-inputNumber styleClass="p-inputtext-sm w-full" [(ngModel)]="Hasil.nilai_pertemuan_4" [max]="100"
+                        mode="decimal" [minFractionDigits]="2">
+                    </p-inputNumber>
+                </div>
+            </div>
+
+            <div class="flex flex-row justify-end items-center gap-3 w-full">
+                <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
+                    (onClick)="IsShowForm = false; IsShowHasil = false; Hasil = null">
+                </p-button>
+
+                <p-button severity="secondary" label="Simpan Nilai"
+                    styleClass="p-button-sm bg-emerald-500 text-white text-sm" (onClick)="handleUpdateNilai(Hasil)">
+                </p-button>
+            </div>
+            }
+
+            @if(!IsGuru) {
+            <p class="text-base font-semibold text-gray-700">
+                Hasil
+            </p>
+
+            <div class="flex flex-row gap-1 w-full p-3 mb-3">
+                <p-editor [(ngModel)]="Hasil.hasil" [style]="{ height: '320px' }" />
+            </div>
+
+            <div class="flex flex-row justify-end items-center gap-3 w-full">
+                <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
+                    (onClick)="IsShowForm = false; IsShowHasil = false; Hasil = null">
+                </p-button>
+
+                <p-button severity="secondary" label="Simpan Hasil"
+                    styleClass="p-button-sm bg-emerald-500 text-white text-sm" (onClick)="handleUpdateHasil(Hasil)">
+                </p-button>
+            </div>
+            }
+
+            }
+
+        </div>
+    </div>
+</app-main>
