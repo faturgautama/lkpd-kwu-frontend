@@ -3,7 +3,6 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { Subject, takeUntil } from 'rxjs';
@@ -22,7 +21,6 @@ import { ReferensiService } from 'src/app/services/referensi.service';
         MainComponent,
         FormsModule,
         ReactiveFormsModule,
-        DropdownModule,
         InputTextModule,
         ButtonModule,
         InputTextareaModule,

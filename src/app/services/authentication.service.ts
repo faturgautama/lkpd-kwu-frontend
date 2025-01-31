@@ -43,6 +43,10 @@ export class AuthenticationService {
         return this._httpOperationService.postRequest(`${environment.apiUrl}/authentication/register`, payload);
     }
 
+    updateProfile(payload: AuthenticationModel.UpdateProfile): Observable<AuthenticationModel.Login> {
+        return this._httpOperationService.putRequest(`${environment.apiUrl}/authentication/profile`, payload);
+    }
+
     private handleSignIn(data: AuthenticationModel.ILoginResponse) {
         localStorage.clear();
         localStorage.setItem("_LPKDUD_", JSON.stringify(data));

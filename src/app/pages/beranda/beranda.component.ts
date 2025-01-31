@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Route, Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 import { MainComponent } from 'src/app/components/layout/main/main.component';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-beranda',
@@ -11,7 +14,9 @@ import { MainComponent } from 'src/app/components/layout/main/main.component';
     templateUrl: './beranda.component.html',
     styleUrl: './beranda.component.scss'
 })
-export class BerandaComponent {
+export class BerandaComponent implements OnInit, OnDestroy {
+
+    Destroy$ = new Subject();
 
     Menu = [
         {
@@ -54,7 +59,24 @@ export class BerandaComponent {
 
     constructor(
         private _router: Router,
+        private _authenticationService: AuthenticationService,
     ) { }
+
+    ngOnInit(): void {
+        // this._authenticationService
+        //     .getProfile()
+        //     .pipe(takeUntil(this.Destroy$))
+        //     .subscribe((result) => {
+        //         if (result.status) {
+        //             !environment.production && console.log("profile =>", result.data);
+        //         }
+        //     })
+    }
+
+    ngOnDestroy(): void {
+        this.Destroy$.next(0);
+        this.Destroy$.complete();
+    }
 
     handleNavigateMenu(url: string) {
         this._router.navigateByUrl(url);
