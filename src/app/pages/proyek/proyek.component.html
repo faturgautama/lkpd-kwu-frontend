@@ -399,6 +399,9 @@
                     (onClick)="IsShowForm = false; IsShowHasil = false; Hasil = null; IsFormEdit = false">
                 </p-button>
 
+                <p-button severity="info" label="Unduh" styleClass="p-button-sm" (onClick)="handleUnduhProyek(Hasil)">
+                </p-button>
+
                 <p-button severity="secondary" label="Simpan Nilai"
                     styleClass="p-button-sm bg-emerald-500 text-white text-sm" (onClick)="handleUpdateNilai(Hasil)">
                 </p-button>
@@ -417,6 +420,9 @@
             <div class="flex flex-row justify-end items-center gap-3 w-full">
                 <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
                     (onClick)="IsShowForm = false; IsShowHasil = false; Hasil = null; IsFormEdit = false">
+                </p-button>
+
+                <p-button severity="info" label="Unduh" styleClass="p-button-sm" (onClick)="handleUnduhProyek(Hasil)">
                 </p-button>
 
                 <p-button severity="secondary" label="Simpan Hasil"

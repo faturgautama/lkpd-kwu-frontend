@@ -1,0 +1,67 @@
+<div *ngIf="Proyek && Hasil" id="downloadProyek" class="grid p-10">
+    <!-- Header -->
+    <div class="flex flex-col gap-2 w-full mb-4 pb-4 border-b border-t-0 border-x-0 border-solid border-gray-300">
+        <!-- Judul -->
+        <div class="flex flex-row gap-1 w-full">
+            <div class="w-4/12">
+                <p class="text-xs font-medium text-gray-700">
+                    Judul Proyek
+                </p>
+            </div>
+            <div class="w-8/12">
+                <p class="text-xs font-bold text-gray-700">
+                    : {{ Proyek.judul }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Kelas -->
+        <div class="flex flex-row gap-1 w-full">
+            <div class="w-4/12">
+                <p class="text-xs font-medium text-gray-700">
+                    Kelas
+                </p>
+            </div>
+            <div class="w-8/12">
+                <p class="text-xs font-bold text-gray-700">
+                    : {{ Proyek.kelas.kelas }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Deskripsi -->
+        <div class="flex flex-row gap-1 w-full">
+            <div class="w-4/12">
+                <p class="text-xs font-medium text-gray-700">
+                    Deskripsi
+                </p>
+            </div>
+            <div class="w-8/12">
+                <p class="text-xs font-bold text-gray-700">
+                    : {{ Proyek.deskripsi }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col gap-0 w-full">
+        <p class="text-xs font-semibold text-gray-700">
+            Daftar Siswa
+        </p>
+
+        <!-- Daftar Siswa -->
+        <div *ngFor="let item of Hasil.detail_siswa" class="flex flex-row gap-1 w-full p-3 mb-3">
+            <p class="text-xs text-gray-700">
+                {{ item.no_absen }} - {{ item.nama_lengkap }}
+            </p>
+        </div>
+
+        <p class="text-xs font-semibold text-gray-700">
+            Hasil
+        </p>
+
+        <div class="flex flex-row gap-1 w-full p-3 mb-3">
+            <p class="text-xs text-gray-700" [innerHTML]="Hasil.hasil"></p>
+        </div>
+    </div>
+</div>

@@ -18,6 +18,7 @@ import { KelasService } from 'src/app/services/kelas.service';
 import { ProyekService } from 'src/app/services/proyek.service';
 import { SiswaService } from 'src/app/services/siswa.service';
 import { EditorModule } from 'primeng/editor';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-proyek',
@@ -68,6 +69,7 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
     Hasil: any;
 
     constructor(
+        private _router: Router,
         private _formBuilder: FormBuilder,
         private _kelasService: KelasService,
         private _siswaService: SiswaService,
@@ -430,5 +432,9 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.getDetailKelompok(this.SelectedProyek.id_proyek);
                 }
             })
+    }
+
+    handleUnduhProyek(data: any) {
+        this._router.navigateByUrl(`/unduh-proyek?id_siswa=${data.detail_siswa[0].id_siswa.toString()}}&id_proyek=${this.SelectedProyek.id_proyek.toString()}`);
     }
 }

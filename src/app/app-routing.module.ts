@@ -24,6 +24,11 @@ const routes: Routes = [
     },
     {
         canActivate: [AuthGuard],
+        path: 'unduh-proyek',
+        loadComponent: async () => (await import('./pages/download-proyek/download-proyek.component')).DownloadProyekComponent,
+    },
+    {
+        canActivate: [AuthGuard],
         path: 'kuis',
         loadComponent: async () => (await import('./pages/kuis/kuis.component')).KuisComponent,
     },
