@@ -229,6 +229,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
 
     handleBackToListKuis() {
         this.IsShowForm = false;
+        this.IsFormEdit = false;
         localStorage.removeItem("_LKPD_SK_");
         localStorage.removeItem("_LKPD_QS_");
         localStorage.removeItem("_LKPD_QSS_");

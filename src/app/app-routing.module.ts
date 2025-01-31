@@ -34,6 +34,11 @@ const routes: Routes = [
     },
     {
         canActivate: [AuthGuard],
+        path: 'referensi',
+        loadComponent: async () => (await import('./pages/referensi/referensi.component')).ReferensiComponent,
+    },
+    {
+        canActivate: [AuthGuard],
         path: 'profile',
         loadComponent: async () => (await import('./pages/profile/profile.component')).ProfileComponent,
     }

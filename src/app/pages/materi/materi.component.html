@@ -65,26 +65,39 @@
             <div class="flex flex-col gap-1 w-full">
                 <p class="text-base font-medium text-gray-700">
                     Judul Materi
+                    <span class="text-red-500">*</span>
                 </p>
                 <input type="text" pInputText class="w-full" placeholder="Masukkan judul materi disini"
                     formControlName="judul">
+
+                <span *ngIf="Form.get('judul')?.touched && Form.get('judul')?.invalid"
+                    class="p-2 rounded-lg bg-red-100 text-red-500 font-semibold text-sm">
+                    Judul materi tidak boleh kosong
+                </span>
             </div>
 
             <!-- Kelas -->
             <div class="flex flex-col gap-1 w-full">
                 <p class="text-base font-medium text-gray-700">
                     Untuk Kelas
+                    <span class="text-red-500">*</span>
                 </p>
                 <p-dropdown [options]="KelasDatasource" optionValue="id_kelas" optionLabel="kelas"
                     placeholder="Pilih kelas disini" formControlName="id_kelas" styleClass="w-full" appendTo="body"
                     [filter]="true">
                 </p-dropdown>
+
+                <span *ngIf="Form.get('id_kelas')?.touched && Form.get('id_kelas')?.invalid"
+                    class="p-2 rounded-lg bg-red-100 text-red-500 font-semibold text-sm">
+                    Kelas tidak boleh kosong
+                </span>
             </div>
 
             <!-- File -->
             <div class="flex flex-col gap-1 w-full mb-4">
                 <p class="text-base font-medium text-gray-700">
                     File Materi
+                    <span class="text-red-500">*</span>
                 </p>
                 <input type="text" pInputText placeholder="Pilih file materi untuk diupload" class="w-full"
                     readonly="true" (click)="FileMateriEl.click()" formControlName="file_name">
@@ -97,7 +110,7 @@
 
             <div class="flex flex-row justify-end items-center gap-3 w-full">
                 <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
-                    (onClick)="IsShowForm = false; Form.reset()">
+                    (onClick)="IsShowForm = false; Form.reset(); IsFormEdit = false">
                 </p-button>
 
                 <p-button *ngIf="!IsFormEdit" severity="secondary" label="Simpan"

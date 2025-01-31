@@ -259,7 +259,7 @@
 
             <div class="flex flex-row justify-end items-center gap-3 w-full">
                 <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
-                    (onClick)="IsShowForm = false; Form.reset()">
+                    (onClick)="IsShowForm = false; Form.reset(); IsFormEdit = false">
                 </p-button>
 
                 <p-button *ngIf="!IsFormEdit" severity="secondary" label="Simpan"
@@ -396,7 +396,7 @@
 
             <div class="flex flex-row justify-end items-center gap-3 w-full">
                 <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
-                    (onClick)="IsShowForm = false; IsShowHasil = false; Hasil = null">
+                    (onClick)="IsShowForm = false; IsShowHasil = false; Hasil = null; IsFormEdit = false">
                 </p-button>
 
                 <p-button severity="secondary" label="Simpan Nilai"
@@ -416,7 +416,7 @@
 
             <div class="flex flex-row justify-end items-center gap-3 w-full">
                 <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
-                    (onClick)="IsShowForm = false; IsShowHasil = false; Hasil = null">
+                    (onClick)="IsShowForm = false; IsShowHasil = false; Hasil = null; IsFormEdit = false">
                 </p-button>
 
                 <p-button severity="secondary" label="Simpan Hasil"
@@ -424,7 +424,6 @@
                 </p-button>
             </div>
             }
-
             }
 
         </div>
