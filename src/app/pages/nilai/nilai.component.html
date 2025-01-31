@@ -1,1 +1,165 @@
-<p>nilai works!</p>
+<app-main>
+    <div class="grid w-full py-5 px-3">
+        <!-- Banner -->
+        <div class="flex flex-col w-full items-center justify-center rounded-lg bg-emerald-500 p-5 shadow mb-5">
+            <p class="text-sm font-medium text-gray-100 text-center">
+                LKPD - Lembar Kerja Peserta Didik
+            </p>
+            <p class="text-lg font-bold text-white text-center">
+                Nilai
+            </p>
+        </div>
+
+        <!-- Titles -->
+        <div class="flex flex-col w-full mb-5 pb-5 border-b border-dashed border-t-0 border-x-0 border-gray-300">
+            <!-- Title Siswa -->
+            <div *ngIf="!IsGuru" class="flex flex-col w-full ">
+                <p class="text-lg font-semibold text-gray-700">
+                    Nilai
+                </p>
+                <p class="text-sm text-gray-600">
+                    Daftar nilai siswa
+                </p>
+            </div>
+
+            <!-- Title Guru -->
+            <div *ngIf="IsGuru" class="flex flex-col w-full">
+                <p class="text-lg font-semibold text-gray-700">
+                    Pilih Kelas
+                </p>
+                <p class="text-sm text-gray-600 mb-3">
+                    Pilih kelas untuk melihat daftar nilai siswa
+                </p>
+
+                <p-dropdown [options]="KelasDatasource" optionValue="id_kelas" optionLabel="kelas"
+                    placeholder="Pilih kelas disini" formControlName="id_kelas" styleClass="w-full" appendTo="body"
+                    [filter]="true" (onChange)="handleChangeKelas($event)">
+                </p-dropdown>
+            </div>
+        </div>
+
+        <!-- List -->
+        <div class="flex flex-col w-full gap-3">
+            <div *ngFor="let item of Siswa; let last = last"
+                class="flex flex-col w-full {{ last ? '' : 'pb-3 border-b border-dashed border-t-0 border-x-0 border-gray-300' }}">
+                <div class="flex justify-between items-center w-full" (click)="item.toggle = !item.toggle">
+                    <p class="text-lg text-gray-700 font-bold">
+                        {{ item.no_absen }}. {{ item.nama_lengkap | titlecase }}
+                    </p>
+
+                    <span class="text-gray-700 mr-3">
+                        <i class="pi pi-chevron-{{ item.toggle ? 'down' : 'right'}}" style="font-size: 13px"></i>
+                    </span>
+                </div>
+
+                <!-- Kuis -->
+                <div *ngIf="item.toggle" class="flex flex-col gap-2 p-3 w-full  ">
+                    <p class="text-base text-gray-700 font-semibold">
+                        A. Nilai Kuis
+                    </p>
+
+                    <!-- If Data Exist -->
+                    <div *ngIf="item.kuis.length" class="flex flex-col gap-2 w-full">
+                        <div *ngFor="let kuis of item.kuis; let i = index"
+                            class="flex flex-row justify-between items-center w-full py-2 px-4 bg-gray-100 rounded-lg shadow">
+                            <div class="flex flex-col gap-1">
+                                <p class="text-base text-gray-800 font-bold">
+                                    {{ kuis.judul }}
+                                </p>
+                                <p class="text-sm text-gray-700">
+                                    {{ kuis.kategori_kuis }}
+                                </p>
+                                <p class="text-xs text-gray-600">
+                                    {{ kuis.create_at | date: 'dd-MM-yyyy HH:mm' }}
+                                </p>
+                            </div>
+
+                            <div class="flex flex-col gap-1">
+                                <p class="text-sm text-gray-700">
+                                    Nilai
+                                </p>
+                                <p
+                                    class="text-2xl font-extrabold {{ kuis.nilai < 75 ? 'text-red-500' : (kuis.nilai > 75 && kuis.nilai < 80 ? 'text-yellow-500' : 'text-emerald-500') }}">
+                                    {{ kuis.nilai }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- If Data Empty -->
+                    <div *ngIf="!item.kuis.length" class="flex flex-col gap-2 w-full">
+                        <p class="text-sm text-gray-700 font-medium text-center">
+                            Tidak Ada Data
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Proyek -->
+                <div *ngIf="item.toggle" class="flex flex-col gap-2 p-3 w-full  ">
+                    <p class="text-base text-gray-700 font-semibold">
+                        B. Nilai Proyek
+                    </p>
+
+                    <!-- If Data Exist -->
+                    <div *ngIf="item.proyek.length" class="flex flex-col gap-2 w-full">
+                        <div *ngFor="let proyek of item.proyek; let i = index"
+                            class="flex flex-row justify-between items-center w-full py-2 px-4 bg-gray-100 rounded-lg shadow">
+                            <div class="flex flex-col gap-1 w-full">
+                                <p class="text-base text-gray-800 font-bold">
+                                    {{ proyek.judul }}
+                                </p>
+                                <p
+                                    class="text-sm text-gray-700 mb-2 pb-2 border-b border-t-0 border-x-0 border-solid border-gray-300">
+                                    {{ proyek.kelompok_proyek }}
+                                </p>
+
+                                <div class="flex flex-row gap-2 w-full px-3">
+                                    <p class="text-gray-700 text-sm font-medium">
+                                        Nilai Pertemuan 1
+                                    </p>
+                                    <p class="text-gray-700 text-sm font-bold">
+                                        : {{ proyek.nilai_pertemuan_1 }}
+                                    </p>
+                                </div>
+
+                                <div class="flex flex-row gap-2 w-full px-3">
+                                    <p class="text-gray-700 text-sm font-medium">
+                                        Nilai Pertemuan 2
+                                    </p>
+                                    <p class="text-gray-700 text-sm font-bold">
+                                        : {{ proyek.nilai_pertemuan_2 }}
+                                    </p>
+                                </div>
+
+                                <div class="flex flex-row gap-2 w-full px-3">
+                                    <p class="text-gray-700 text-sm font-medium">
+                                        Nilai Pertemuan 3
+                                    </p>
+                                    <p class="text-gray-700 text-sm font-bold">
+                                        : {{ proyek.nilai_pertemuan_3 }}
+                                    </p>
+                                </div>
+
+                                <div class="flex flex-row gap-2 w-full px-3">
+                                    <p class="text-gray-700 text-sm font-medium">
+                                        Nilai Pertemuan 4
+                                    </p>
+                                    <p class="text-gray-700 text-sm font-bold">
+                                        : {{ proyek.nilai_pertemuan_4 }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- If Data Empty -->
+                    <div *ngIf="!item.proyek.length" class="flex flex-col gap-2 w-full">
+                        <p class="text-sm text-gray-700 font-medium text-center">
+                            Tidak Ada Data
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-main>

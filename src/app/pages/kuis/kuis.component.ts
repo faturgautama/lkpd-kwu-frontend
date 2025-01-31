@@ -239,6 +239,8 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
         this.Pertanyaan = [];
         this.SelectedPertanyaan = null;
         this.SelectedIndexPertanyaan = 0;
+
+        this.getAllKuis();
     }
 
     handleUpdateKuis(args: any) {
