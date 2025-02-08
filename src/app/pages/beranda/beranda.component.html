@@ -22,15 +22,53 @@
 
         <!-- Menu -->
         <div class="grid grid-cols-2 justify-center items-center gap-5">
-            @for (item of Menu; track $index) {
-            <div class="flex flex-col bg-emerald-100 p-5 rounded-lg shadow cursor-pointer items-center justify-center gap-2"
-                (click)="handleNavigateMenu(item.url)">
-                <i class="{{item.icon}} text-emerald-500" style="font-size: 20px;"></i>
-                <p class="text-xl text-emerald-500 font-extrabold">
-                    {{ item.title }}
+            <div class="flex flex-col bg-sky-100 p-5 rounded-lg shadow cursor-pointer items-center justify-center gap-2"
+                (click)="handleNavigateMenu('/materi')">
+                <i class="pi pi-file text-sky-500" style="font-size: 20px;"></i>
+                <p class="text-xl text-sky-500 font-extrabold">
+                    Materi
                 </p>
             </div>
-            }
+
+            <div class="flex flex-col bg-teal-100 p-5 rounded-lg shadow cursor-pointer items-center justify-center gap-2"
+                (click)="handleNavigateMenu('/kuis')">
+                <i class="pi pi-pen-to-square text-teal-500" style="font-size: 20px;"></i>
+                <p class="text-xl text-teal-500 font-extrabold">
+                    Kuis
+                </p>
+            </div>
+
+            <div class="flex flex-col bg-lime-100 p-5 rounded-lg shadow cursor-pointer items-center justify-center gap-2"
+                (click)="handleNavigateMenu('/proyek')">
+                <i class="pi pi-warehouse text-lime-500" style="font-size: 20px;"></i>
+                <p class="text-xl text-lime-500 font-extrabold">
+                    Proyek
+                </p>
+            </div>
+
+            <div class="flex flex-col bg-indigo-100 p-5 rounded-lg shadow cursor-pointer items-center justify-center gap-2"
+                (click)="handleNavigateMenu('/nilai')">
+                <i class="pi pi-trophy text-indigo-500" style="font-size: 20px;"></i>
+                <p class="text-xl text-indigo-500 font-extrabold">
+                    Nilai
+                </p>
+            </div>
+
+            <div class="flex flex-col bg-rose-100 p-5 rounded-lg shadow cursor-pointer items-center justify-center gap-2"
+                (click)="handleNavigateMenu('/referensi')">
+                <i class="pi pi-file-check text-rose-500" style="font-size: 20px;"></i>
+                <p class="text-xl text-rose-500 font-extrabold">
+                    Referensi
+                </p>
+            </div>
+
+            <div class="flex flex-col bg-fuchsia-100 p-5 rounded-lg shadow cursor-pointer items-center justify-center gap-2"
+                (click)="handleNavigateMenu('/profile')">
+                <i class="pi pi-file-check text-fuchsia-500" style="font-size: 20px;"></i>
+                <p class="text-xl text-fuchsia-500 font-extrabold">
+                    Profile
+                </p>
+            </div>
         </div>
     </div>
 </app-main>

@@ -24,36 +24,42 @@ export class BerandaComponent implements OnInit, OnDestroy {
             url: '/materi',
             title: 'Materi',
             icon: 'pi pi-file',
+            color: 'sky',
         },
         {
             id: 'kuis',
             url: '/kuis',
             title: 'Kuis',
             icon: 'pi pi-pen-to-square',
+            color: 'teal'
         },
         {
             id: 'proyek',
             url: '/proyek',
             title: 'Proyek',
             icon: 'pi pi-warehouse',
+            color: 'lime'
         },
         {
             id: 'nilai',
             url: '/nilai',
             title: 'Nilai',
             icon: 'pi pi-trophy',
+            color: 'indigo'
         },
         {
             id: 'referensi',
             url: '/referensi',
             title: 'Referensi',
             icon: 'pi pi-file-check',
+            color: 'rose'
         },
         {
             id: 'profile',
             url: '/profile',
             title: 'Profile',
             icon: 'pi pi-user-edit',
+            color: 'fuchsia'
         },
     ];
 
