@@ -261,12 +261,18 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
 
     handleDeleteKuis(args: any) {
         const payload = {
-            ...args,
-            is_active: !args.is_active
-        }
+            id_kuis: args.id_kuis,
+            id_kelas: args.id_kelas,
+            judul: args.judul,
+            start_date: args.start_date,
+            end_date: args.end_date,
+            kategori_kuis: args.kategori_kuis,
+            deskripsi: args.deskripsi,
+            is_active: args.is_active
+        };
 
         this._kuisService
-            .update(payload)
+            .delete(payload)
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
                 if (result.status) {
