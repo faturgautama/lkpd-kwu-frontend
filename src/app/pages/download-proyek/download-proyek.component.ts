@@ -62,14 +62,62 @@ export class DownloadProyekComponent implements OnInit, OnDestroy {
         this.Destroy$.complete();
     }
 
+    // private onExportPdf() {
+    //     this._utilityService.ShowLoading$.next(true);
+
+    //     const node = document.getElementById("downloadProyek");
+
+    //     if (node) {
+    //         const scaleFactor = 4; // Increase resolution (higher = better quality)
+
+    //         const options = {
+    //             width: node.offsetWidth * scaleFactor,
+    //             height: node.offsetHeight * scaleFactor,
+    //             style: {
+    //                 transform: `scale(${scaleFactor})`,
+    //                 transformOrigin: "top left",
+    //                 width: `${node.offsetWidth * scaleFactor}px`,
+    //                 height: `${node.offsetHeight * scaleFactor}px`
+    //             }
+    //         };
+
+    //         domtoimage.toPng(node, options)
+    //             .then((dataUrl) => {
+    //                 // Generate the PDF
+    //                 const pdf = new jspdf('p', 'mm', 'a4');
+    //                 const pdfWidth = pdf.internal.pageSize.getWidth();
+    //                 const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    //                 // Adjust image to A4 dimensions while maintaining aspect ratio
+    //                 const imgProps = pdf.getImageProperties(dataUrl);
+    //                 const imgWidth = pdfWidth; // Fit to page width
+    //                 const imgHeight = (imgProps.height * imgWidth) / imgProps.width; // Maintain aspect ratio
+
+    //                 pdf.addImage(dataUrl, 'PNG', 0, 0, imgWidth, imgHeight);
+
+    //                 // Save the PDF
+    //                 pdf.save(`${this.Proyek.judul}.pdf`);
+    //                 this._utilityService.ShowLoading$.next(false);
+
+    //                 setTimeout(() => {
+    //                     window.history.back();
+    //                 }, 100);
+    //             })
+    //             .catch((error) => {
+    //                 console.error('Error capturing the element:', error);
+    //             });
+    //     } else {
+    //         console.error('Element not found');
+    //     }
+    // }
+
     private onExportPdf() {
         this._utilityService.ShowLoading$.next(true);
 
         const node = document.getElementById("downloadProyek");
 
         if (node) {
-            const scaleFactor = 3; // Increase resolution (higher = better quality)
-
+            const scaleFactor = 2; // Scale up for better quality
             const options = {
                 width: node.offsetWidth * scaleFactor,
                 height: node.offsetHeight * scaleFactor,
@@ -83,17 +131,33 @@ export class DownloadProyekComponent implements OnInit, OnDestroy {
 
             domtoimage.toPng(node, options)
                 .then((dataUrl) => {
-                    // Generate the PDF
                     const pdf = new jspdf('p', 'mm', 'a4');
                     const pdfWidth = pdf.internal.pageSize.getWidth();
                     const pdfHeight = pdf.internal.pageSize.getHeight();
 
-                    // Adjust image to A4 dimensions while maintaining aspect ratio
+                    // Get image properties
                     const imgProps = pdf.getImageProperties(dataUrl);
-                    const imgWidth = pdfWidth; // Fit to page width
-                    const imgHeight = (imgProps.height * imgWidth) / imgProps.width; // Maintain aspect ratio
+                    const imgWidth = pdfWidth;
+                    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
 
-                    pdf.addImage(dataUrl, 'PNG', 0, 0, imgWidth, imgHeight);
+                    let yPosition = 0; // Current height position
+
+                    while (yPosition < imgHeight) {
+                        pdf.addImage(
+                            dataUrl,
+                            'PNG',
+                            0,
+                            -yPosition, // Shift the cropped part
+                            imgWidth,
+                            imgHeight
+                        );
+
+                        yPosition += pdfHeight; // Move to the next section
+
+                        if (yPosition < imgHeight) {
+                            pdf.addPage(); // Add new page if content exceeds current page
+                        }
+                    }
 
                     // Save the PDF
                     pdf.save(`${this.Proyek.judul}.pdf`);
@@ -110,4 +174,5 @@ export class DownloadProyekComponent implements OnInit, OnDestroy {
             console.error('Element not found');
         }
     }
+
 }

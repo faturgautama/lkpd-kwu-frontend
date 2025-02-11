@@ -30,7 +30,7 @@
         </div>
 
         <!-- Deskripsi -->
-        <div class="flex flex-row gap-1 w-full">
+        <div class="hidden flex-row gap-1 w-full">
             <div class="w-4/12">
                 <p class="text-xs font-medium text-gray-700">
                     Deskripsi
@@ -50,8 +50,8 @@
         </p>
 
         <!-- Daftar Siswa -->
-        <div *ngFor="let item of Hasil.detail_siswa" class="flex flex-row gap-1 w-full p-3 mb-3">
-            <p class="text-xs text-gray-700">
+        <div class="flex flex-col gap-1 w-full p-3 mb-3">
+            <p *ngFor="let item of Hasil.detail_siswa" class="text-xs text-gray-700">
                 {{ item.no_absen }} - {{ item.nama_lengkap }}
             </p>
         </div>

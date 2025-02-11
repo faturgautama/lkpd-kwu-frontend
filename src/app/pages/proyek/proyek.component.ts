@@ -278,6 +278,25 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
             })
     }
 
+    handleUpdateSiswa(args: any, kelompok: any,) {
+        const payload = {
+            id_user: args.id_user,
+            id_siswa: args.id_siswa,
+            id_siswa_kelompok_proyek: kelompok.id_siswa_kelompok_proyek
+        }
+
+        this._proyekService
+            .updateSiswaKelompok(payload)
+            .pipe(takeUntil(this.Destroy$))
+            .subscribe((result) => {
+                if (result.status) {
+                    this._messageService.clear();
+                    this._messageService.add({ severity: 'success', summary: 'Berhasil!', detail: 'Siswa Berhasil Diperbarui' });
+                    this.handleClickButtonEdit(this.Form.get('id_proyek')?.value)
+                }
+            })
+    }
+
     handleSaveProyek(args: any) {
         let { id_proyek, is_active, ...payload } = args;
         payload.kelompok = this.Kelompok.map((item: any) => {
@@ -384,7 +403,15 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
                 if (result.status) {
-                    this.Hasil = result.data;
+                    if (result.data.hasil.includes('Belum Ada Hasil')) {
+                        const newData = {
+                            ...result.data,
+                            hasil: this.SelectedProyek.deskripsi,
+                        }
+                        this.Hasil = newData;
+                    } else {
+                        this.Hasil = result.data;
+                    }
                 }
             })
     }

@@ -128,12 +128,11 @@
                 <!-- Deskripsi Proyek -->
                 <div class="flex flex-col gap-1 w-full">
                     <p class="text-base font-medium text-gray-700">
-                        Deskripsi Proyek
+                        Soal Proyek
                         <span class="text-red-500">*</span>
                     </p>
 
-                    <textarea rows="3" class="w-full" pInputTextarea placeholder="Masukkan deskripsi proyek disini"
-                        formControlName="deskripsi"></textarea>
+                    <p-editor formControlName="deskripsi" [style]="{ height: '500px' }" />
 
                     <span *ngIf="Form.get('deskripsi')?.touched && Form.get('deskripsi')?.invalid"
                         class="p-2 rounded-lg bg-red-100 text-red-500 font-semibold text-sm">
@@ -226,9 +225,14 @@
                                     <i class="pi pi-trash"></i>
                                 </span>
 
-                                <span *ngIf="IsFormEdit && siswa.id_siswa_kelompok_proyek"
+                                <span *ngIf="IsFormEdit && !siswa.id_siswa_kelompok_proyek"
                                     class=" cursor-pointer text-sky-500" (click)="handleSaveSiswa(siswa, item)">
                                     <i class="pi pi-save"></i>
+                                </span>
+
+                                <span *ngIf="IsFormEdit && siswa.id_siswa_kelompok_proyek"
+                                    class=" cursor-pointer text-yellow-500" (click)="handleSaveSiswa(siswa, item)">
+                                    <i class="pi pi-pencil"></i>
                                 </span>
                             </div>
                         </div>
@@ -302,7 +306,7 @@
                 </div>
 
                 <!-- Deskripsi -->
-                <div class="flex flex-row gap-1 w-full">
+                <div class="hidden flex-row gap-1 w-full">
                     <div class="w-4/12">
                         <p class="text-base font-medium text-gray-700">
                             Deskripsi
@@ -333,8 +337,8 @@
             </p>
 
             <!-- Daftar Siswa -->
-            <div *ngFor="let item of Hasil.detail_siswa" class="flex flex-row gap-1 w-full p-3 mb-3">
-                <p class="text-sm text-gray-700">
+            <div class="flex flex-col gap-1 w-full p-3 mb-3">
+                <p *ngFor="let item of Hasil.detail_siswa" class="text-sm text-gray-700">
                     {{ item.no_absen }} - {{ item.nama_lengkap }}
                 </p>
             </div>
