@@ -160,7 +160,13 @@ export class ReferensiComponent implements OnInit, AfterViewInit, OnDestroy {
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
                 if (result.status) {
-                    window.open(result.data.link);
+                    const userAgent = window.navigator.userAgent;
+
+                    if (userAgent.indexOf('Safari') > -1) {
+                        window.location.href = result.data.link;
+                    } else {
+                        window.open(result.data.link, '_blank')
+                    }
                 }
             })
     }
