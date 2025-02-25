@@ -28,6 +28,10 @@ export class KuisService {
         return this._httpOperationService.getRequest(`${environment.apiUrl}/kuis/retrieve/${id_kuis}`);
     }
 
+    getAnswerSiswa(id_kuis: any, id_siswa: any): Observable<KuisModel.GetByIdKuis> {
+        return this._httpOperationService.getRequest(`${environment.apiUrl}/kuis/retrieve-with-answer/${id_kuis}/${id_siswa}`);
+    }
+
     create(data: KuisModel.CreateKuis): Observable<HttpBaseResponse> {
         return this._httpOperationService.postRequest(`${environment.apiUrl}/kuis`, data);
     }
@@ -55,7 +59,11 @@ export class KuisService {
         return this._httpOperationService.deleteRequest(`${environment.apiUrl}/kuis/delete-pertanyaan/${id_pertanyaan}`);
     }
 
-    submitJawaban(data: KuisModel.CreateJawabanKuis): Observable<HttpBaseResponse> {
+    submitJawaban(data: any): Observable<HttpBaseResponse> {
         return this._httpOperationService.postRequest(`${environment.apiUrl}/kuis/insert-jawaban`, data);
+    }
+
+    penilaianJawaban(data: any): Observable<HttpBaseResponse> {
+        return this._httpOperationService.putRequest(`${environment.apiUrl}/kuis/penilaian-jawaban`, data);
     }
 }

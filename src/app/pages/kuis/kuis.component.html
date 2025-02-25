@@ -23,24 +23,23 @@
 
             @if (IsGuru && !IsShowForm) {
             <p-button severity="secondary" styleClass="p-button-sm bg-emerald-500 text-sm text-white" label="Tambah"
-                (onClick)="IsShowForm = true; Form.reset()">
+                (onClick)="IsShowForm = true; Form.reset(); PageState = 'guru'">
             </p-button>
             }
         </div>
 
         <!-- List -->
-        <div *ngIf="!IsShowForm" class="flex flex-col gap-3 w-full">
+        <div *ngIf="PageState == 'list'" class="flex flex-col gap-3 w-full">
             @for (item of Kuis; track $index) {
-            <div
-                class="flex flex-row justify-between items-center w-full p-3 rounded-lg border border-dashed border-gray-300">
-                <div class="flex flex-col">
+            <div class="flex flex-col w-full p-3 rounded-lg border border-dashed border-gray-300">
+                <div class="flex flex-col w-full mb-2">
                     <div
                         class="flex w-[5.5rem] items-center justify-center px-2 py-1 {{ item.kategori_kuis == 'PRE TEST' ? 'bg-sky-100 text-sky-600' : 'bg-orange-100 text-orange-600'  }} rounded-lg mb-1">
                         <p class="font-semibold text-xs">
                             {{ item.kategori_kuis }}
                         </p>
                     </div>
-                    <p class="text-lg text-emerald-500 font-bold">
+                    <p class="text-base text-emerald-500 font-bold">
                         {{ item.judul }}
                     </p>
                     <p class="text-sm text-gray-600 mb-0">
@@ -48,13 +47,16 @@
                     </p>
                 </div>
 
-                <div class="flex gap-5 {{ item.is_answered ? 'h-full items-end' : 'items-center'}}">
-                    <span *ngIf="!IsGuru && !item.is_answered" class="text-yellow-500"
+                <div class="flex gap-3 {{ item.is_answered ? 'h-full items-end' : 'items-center'}}">
+                    <span *ngIf="!IsGuru && !item.is_answered"
+                        class="flex items-center bg-yellow-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
                         (click)="handleOpenKuisForSiswa(item.id_kuis)">
-                        <i class="pi pi-file-edit"></i>
+                        <i class="pi pi-file-edit text-yellow-600" style="font-size: 12px"></i>
+                        <p class="text-sm font-semibold text-yellow-600">Mulai Kerjakan</p>
                     </span>
 
-                    <div *ngIf="!IsGuru && item.is_answered" class="flex flex-col items-center gap-1">
+                    <div *ngIf="!IsGuru && item.is_answered"
+                        class="flex flex-col items-center p-2 rounded-md {{ item.skor! >=75 ? 'bg-emerald-100' : 'bg-red-100' }} gap-1">
                         <p class="text-sm text-gray-600">
                             Skor Anda
                         </p>
@@ -63,12 +65,28 @@
                         </p>
                     </div>
 
-                    <span *ngIf="IsGuru" class="text-yellow-500" (click)="handleClickButtonEdit(item.id_kuis)">
-                        <i class="pi pi-pencil"></i>
+                    <span *ngIf="IsGuru" class="flex items-center bg-yellow-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
+                        (click)="handleClickButtonEdit(item.id_kuis)">
+                        <i class="pi pi-pencil text-yellow-600" style="font-size: 12px"></i>
+                        <p class="text-sm font-semibold text-yellow-600">Edit</p>
                     </span>
 
-                    <span *ngIf="IsGuru" class="text-red-500" (click)="handleDeleteKuis(item)">
-                        <i class="pi pi-trash"></i>
+                    <span *ngIf="IsGuru" class="flex items-center bg-red-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
+                        (click)="handleDeleteKuis(item)">
+                        <i class="pi pi-trash text-red-600" style="font-size: 12px"></i>
+                        <p class="text-sm font-semibold text-red-600">Hapus</p>
+                    </span>
+
+                    <span *ngIf="IsGuru" class="flex items-center bg-sky-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
+                        (click)="handleLihatHasil(item)">
+                        <i class="pi pi-info text-sky-600" style="font-size: 12px"></i>
+                        <p class="text-sm font-semibold text-sky-600">Nilai</p>
+                    </span>
+
+                    <span *ngIf="IsGuru" class="flex items-center bg-gray-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
+                        (click)="handleOpenKuisForSiswa(item.id_kuis)">
+                        <i class="pi pi-eye text-gray-600" style="font-size: 12px"></i>
+                        <p class="text-sm font-semibold text-gray-600">Preview</p>
                     </span>
                 </div>
             </div>
@@ -76,13 +94,13 @@
         </div>
 
         <!-- Form -->
-        <div *ngIf="IsShowForm && IsGuru" class="flex flex-col gap-0 w-full">
+        <div *ngIf="PageState == 'guru'" class="flex flex-col gap-0 w-full">
             <!-- Header -->
             <div class="flex flex-col gap-3 w-full mb-4 pb-4 border-b border-t-0 border-x-0 border-dashed border-gray-300"
                 [formGroup]="Form">
                 <!-- Judul -->
                 <div class="flex flex-col gap-1 w-full">
-                    <p class="text-base font-medium text-gray-700">
+                    <p class="text-sm font-medium text-gray-700">
                         Judul Kuis
                         <span class="text-red-500">*</span>
                     </p>
@@ -97,7 +115,7 @@
 
                 <!-- Kelas -->
                 <div class="flex flex-col gap-1 w-full">
-                    <p class="text-base font-medium text-gray-700">
+                    <p class="text-sm font-medium text-gray-700">
                         Untuk Kelas
                         <span class="text-red-500">*</span>
                     </p>
@@ -114,7 +132,7 @@
 
                 <!-- Waktu -->
                 <div class="flex flex-col gap-1 w-full">
-                    <p class="text-base font-medium text-gray-700">
+                    <p class="text-sm font-medium text-gray-700">
                         Waktu Pengerjaan
                     </p>
 
@@ -135,7 +153,7 @@
 
                 <!-- Kategori Kuis -->
                 <div class="flex flex-col gap-1 w-full">
-                    <p class="text-base font-medium text-gray-700">
+                    <p class="text-sm font-medium text-gray-700">
                         Kategori Kuis
                         <span class="text-red-500">*</span>
                     </p>
@@ -165,7 +183,7 @@
 
                 <!-- Deskripsi Kuis -->
                 <div class="flex flex-col gap-1 w-full">
-                    <p class="text-base font-medium text-gray-700">
+                    <p class="text-sm font-medium text-gray-700">
                         Deskripsi Kuis
                         <span class="text-red-500">*</span>
                     </p>
@@ -205,12 +223,13 @@
                             Soal
                             <span class="text-red-500">*</span>
                         </p>
-                        <input type="text" pInputText class="w-full" placeholder="Masukkan soal kuis disini"
-                            [(ngModel)]="item.pertanyaan">
+
+                        <textarea pInputTextarea rows="5" placeholder="Masukkan soal kuis disini"
+                            [(ngModel)]="item.pertanyaan"></textarea>
                     </div>
 
                     <!-- Opsi A -->
-                    <div class="flex flex-col gap-1 w-full">
+                    <div class="hidden flex-col gap-1 w-full">
                         <p class="text-base font-medium text-gray-700">
                             Opsi A
                             <span class="text-red-500">*</span>
@@ -220,7 +239,7 @@
                     </div>
 
                     <!-- Opsi B -->
-                    <div class="flex flex-col gap-1 w-full">
+                    <div class="hidden flex-col gap-1 w-full">
                         <p class="text-base font-medium text-gray-700">
                             Opsi B
                             <span class="text-red-500">*</span>
@@ -230,7 +249,7 @@
                     </div>
 
                     <!-- Opsi C -->
-                    <div class="flex flex-col gap-1 w-full">
+                    <div class="hidden flex-col gap-1 w-full">
                         <p class="text-base font-medium text-gray-700">
                             Opsi C
                             <span class="text-red-500">*</span>
@@ -240,7 +259,7 @@
                     </div>
 
                     <!-- Opsi D -->
-                    <div class="flex flex-col gap-1 w-full">
+                    <div class="hidden flex-col gap-1 w-full">
                         <p class="text-base font-medium text-gray-700">
                             Opsi D
                             <span class="text-red-500">*</span>
@@ -250,7 +269,7 @@
                     </div>
 
                     <!-- Opsi E -->
-                    <div class="flex flex-col gap-1 w-full">
+                    <div class="hidden flex-col gap-1 w-full">
                         <p class="text-base font-medium text-gray-700">
                             Opsi E
                             <span class="text-red-500">*</span>
@@ -260,7 +279,7 @@
                     </div>
 
                     <!-- Jawaban Yang Benar -->
-                    <div class="flex flex-col gap-1 w-full mb-3">
+                    <div class="hidden flex-col gap-1 w-full mb-3">
                         <p class="text-base font-medium text-gray-700">
                             Jawaban Yang Benar
                             <span class="text-red-500">*</span>
@@ -309,7 +328,7 @@
 
             <div class="flex flex-row justify-end items-center gap-3 w-full">
                 <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
-                    (onClick)="IsShowForm = false; Form.reset(); IsFormEdit = false">
+                    (onClick)="IsShowForm = false; PageState = 'list'; Form.reset(); IsFormEdit = false">
                 </p-button>
 
                 <p-button *ngIf="!IsFormEdit" severity="secondary" label="Simpan"
@@ -323,19 +342,19 @@
         </div>
 
         <!-- Siswa View -->
-        <div *ngIf="IsShowForm && !IsGuru" class="flex flex-col gap-0 w-full">
+        <div *ngIf="PageState == 'siswa'" class="flex flex-col gap-0 w-full">
             <!-- Header -->
             <div
                 class="flex flex-col gap-2 w-full mb-4 pb-4 border-b border-t-0 border-x-0 border-dashed border-gray-300">
                 <!-- Judul -->
                 <div class="flex flex-row gap-1 w-full">
                     <div class="w-4/12">
-                        <p class="text-base font-medium text-gray-700">
+                        <p class="text-sm font-medium text-gray-700">
                             Judul Kuis
                         </p>
                     </div>
                     <div class="w-8/12">
-                        <p class="text-base font-bold text-gray-700">
+                        <p class="text-sm font-bold text-gray-700">
                             : {{ SelectedKuis.judul }}
                         </p>
                     </div>
@@ -344,12 +363,12 @@
                 <!-- Kelas -->
                 <div class="flex flex-row gap-1 w-full">
                     <div class="w-4/12">
-                        <p class="text-base font-medium text-gray-700">
+                        <p class="text-sm font-medium text-gray-700">
                             Kelas
                         </p>
                     </div>
                     <div class="w-8/12">
-                        <p class="text-base font-bold text-gray-700">
+                        <p class="text-sm font-bold text-gray-700">
                             : {{ SelectedKuis.kelas }}
                         </p>
                     </div>
@@ -358,12 +377,12 @@
                 <!-- Kelas -->
                 <div class="flex flex-row gap-1 w-full">
                     <div class="w-4/12">
-                        <p class="text-base font-medium text-gray-700">
+                        <p class="text-sm font-medium text-gray-700">
                             Kategori
                         </p>
                     </div>
                     <div class="w-8/12">
-                        <p class="text-base font-bold text-gray-700">
+                        <p class="text-sm font-bold text-gray-700 text-justify">
                             : {{ SelectedKuis.kategori_kuis }}
                         </p>
                     </div>
@@ -372,12 +391,12 @@
                 <!-- Deskripsi -->
                 <div class="flex flex-row gap-1 w-full">
                     <div class="w-4/12">
-                        <p class="text-base font-medium text-gray-700">
+                        <p class="text-sm font-medium text-gray-700">
                             Deskripsi
                         </p>
                     </div>
                     <div class="w-8/12">
-                        <p class="text-base font-bold text-gray-700">
+                        <p class="text-sm font-bold text-gray-700">
                             : {{ SelectedKuis.deskripsi }}
                         </p>
                     </div>
@@ -393,76 +412,105 @@
             </div>
 
             <!-- Soal -->
-            <div class="flex flex-col w-full p-3 mb-4">
-                <p class="text-base font-medium text-gray-700 mb-3">
-                    {{ SelectedIndexPertanyaan + 1 }}. {{ SelectedPertanyaan.pertanyaan }}
+            <div *ngFor="let item of Pertanyaan; let i = index" class="flex flex-col w-full p-3 mb-4">
+                <p class="text-sm font-medium text-gray-700 mb-3 text-justify">
+                    {{ i + 1 }}. {{ item.pertanyaan }}
                 </p>
 
-                <!-- Opsi -->
-                <div class="flex flex-col gap-4 w-full mb-3">
-                    <!-- Option A -->
-                    <div class="flex items-center">
-                        <p-radioButton name="correct" value="A" [(ngModel)]="SelectedPertanyaan.jawaban"
-                            inputId="correct_a" />
-                        <label for="correct_a" class="ml-2 text-sm">
-                            {{ SelectedPertanyaan.option_a }}
-                        </label>
-                    </div>
-
-                    <!-- Option B -->
-                    <div class="flex items-center">
-                        <p-radioButton name="correct" value="B" [(ngModel)]="SelectedPertanyaan.jawaban"
-                            inputId="correct_b" />
-                        <label for="correct_b" class="ml-2 text-sm">
-                            {{ SelectedPertanyaan.option_b }}
-                        </label>
-                    </div>
-
-                    <!-- Option C -->
-                    <div class="flex items-center">
-                        <p-radioButton name="correct" value="C" [(ngModel)]="SelectedPertanyaan.jawaban"
-                            inputId="correct_c" />
-                        <label for="correct_c" class="ml-2 text-sm">
-                            {{ SelectedPertanyaan.option_c }}
-                        </label>
-                    </div>
-
-                    <!-- Option D -->
-                    <div class="flex items-center">
-                        <p-radioButton name="correct" value="D" [(ngModel)]="SelectedPertanyaan.jawaban"
-                            inputId="correct_d" />
-                        <label for="correct_d" class="ml-2 text-sm">
-                            {{ SelectedPertanyaan.option_d }}
-                        </label>
-                    </div>
-
-                    <!-- Option E -->
-                    <div class="flex items-center">
-                        <p-radioButton name="correct" value="E" [(ngModel)]="SelectedPertanyaan.jawaban"
-                            inputId="correct_e" />
-                        <label for="correct_e" class="ml-2 text-sm">
-                            {{ SelectedPertanyaan.option_e }}
-                        </label>
-                    </div>
-                </div>
+                <!-- Essai -->
+                <textarea pInputTextarea rows="5" placeholder="Input jawaban Anda disini"
+                    [(ngModel)]="item.jawaban"></textarea>
             </div>
 
             <!-- Button -->
             <div class="flex flex-row w-full justify-end gap-4">
-                <p-button *ngIf="SelectedIndexPertanyaan == 0" severity="secondary" label="Kembali"
-                    styleClass="p-button-sm" (onClick)="handleBackToListKuis()">
+                <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
+                    (onClick)="handleBackToListKuis()">
                 </p-button>
 
-                <p-button *ngIf="SelectedIndexPertanyaan < 4" [disabled]="!SelectedPertanyaan.jawaban"
-                    severity="secondary" label="Soal Selanjutnya"
-                    styleClass="p-button-sm bg-emerald-500 text-white text-sm"
-                    (onClick)="handleSubmitPertanyaan(SelectedPertanyaan)">
+                <p-button severity="secondary" label="Simpan" styleClass="p-button-sm bg-emerald-500 text-white text-sm"
+                    (onClick)="handleSubmitPertanyaan(Pertanyaan)">
                 </p-button>
+            </div>
+        </div>
 
-                <p-button *ngIf="SelectedIndexPertanyaan > 3" [disabled]="!SelectedPertanyaan.jawaban"
-                    severity="secondary" label="Simpan" styleClass="p-button-sm bg-emerald-500 text-white text-sm"
-                    (onClick)="handleSubmitPertanyaan(SelectedPertanyaan)">
-                </p-button>
+        <!-- Hasil View -->
+        <div *ngIf="PageState == 'hasil'" class="flex flex-col gap-0 w-full">
+            <!-- Header -->
+            <div
+                class="flex flex-col gap-2 w-full mb-4 pb-4 border-b border-t-0 border-x-0 border-dashed border-gray-300">
+                <!-- Judul -->
+                <div class="flex flex-row gap-1 w-full">
+                    <div class="w-4/12">
+                        <p class="text-sm font-medium text-gray-700">
+                            Judul Kuis
+                        </p>
+                    </div>
+                    <div class="w-8/12">
+                        <p class="text-sm font-bold text-gray-700">
+                            : {{ SelectedKuis.judul }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Kategori -->
+                <div class="flex flex-row gap-1 w-full">
+                    <div class="w-4/12">
+                        <p class="text-sm font-medium text-gray-700">
+                            Kategori
+                        </p>
+                    </div>
+                    <div class="w-8/12">
+                        <p class="text-sm font-bold text-gray-700">
+                            : {{ SelectedKuis.kategori_kuis }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Deskripsi -->
+                <div class="flex flex-row gap-1 w-full">
+                    <div class="w-4/12">
+                        <p class="text-sm font-medium text-gray-700">
+                            Deskripsi
+                        </p>
+                    </div>
+                    <div class="w-8/12">
+                        <p class="text-sm font-bold text-gray-700 text-justify">
+                            : {{ SelectedKuis.deskripsi }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pilih Siswa -->
+            <div class="flex flex-col gap-1 w-full mb-5">
+                <p-dropdown [options]="SiswaDatasource" optionValue="id_siswa" optionLabel="nama_lengkap"
+                    placeholder="Pilih siswa disini" styleClass="w-full" appendTo="body" [filter]="true"
+                    (onChange)="handleChangeSiswa($event)">
+                </p-dropdown>
+            </div>
+
+            <!-- Soal -->
+            <div *ngFor="let item of Pertanyaan; let i = index" class="flex flex-col w-full p-3 mb-4">
+                <p class="text-sm font-medium text-gray-700 mb-3 text-justify ">
+                    {{ i + 1 }}. {{ item.pertanyaan }}
+                </p>
+
+                <!-- Essai -->
+                <textarea pInputTextarea rows="5" placeholder="Input jawaban Anda disini" [(ngModel)]="item.jawaban"
+                    readonly></textarea>
+
+                <!-- Button -->
+                <div class="grid grid-cols-2 w-full gap-4 mt-2">
+                    <p-button [severity]="item.is_correct ? 'secondary' : 'danger'" label="Salah"
+                        styleClass="p-button-sm w-full" (onClick)="handlePenilaianSiswa(item, false)">
+                    </p-button>
+
+                    <p-button severity="secondary" label="Benar"
+                        styleClass="p-button-sm {{ item.is_correct ? 'bg-emerald-500 text-white text-sm' : '' }} w-full"
+                        (onClick)="handlePenilaianSiswa(item, true)">
+                    </p-button>
+                </div>
             </div>
         </div>
     </div>

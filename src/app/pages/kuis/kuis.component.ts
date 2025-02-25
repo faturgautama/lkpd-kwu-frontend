@@ -16,6 +16,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { KelasService } from 'src/app/services/kelas.service';
 import { KuisService } from 'src/app/services/kuis.service';
 import { environment } from 'src/environments/environment';
+import { SiswaService } from 'src/app/services/siswa.service';
 
 @Component({
     selector: 'app-kuis',
@@ -47,9 +48,13 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
 
     KelasDatasource: KelasModel.IKelas[] = [];
 
+    SiswaDatasource: any[] = [];
+
+    SelectedSiswa: any;
+
     Kuis: KuisModel.IKuis[] = [];
 
-    Pertanyaan: KuisModel.IPertanyaanKuis[] = [
+    Pertanyaan: any[] = [
         {
             id_pertanyaan: 0,
             pertanyaan: '',
@@ -58,7 +63,8 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             option_c: '',
             option_d: '',
             option_e: '',
-            correct: ''
+            correct: '',
+            jawaban: ''
         },
         {
             id_pertanyaan: 0,
@@ -68,7 +74,8 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             option_c: '',
             option_d: '',
             option_e: '',
-            correct: ''
+            correct: '',
+            jawaban: ''
         },
         {
             id_pertanyaan: 0,
@@ -78,7 +85,8 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             option_c: '',
             option_d: '',
             option_e: '',
-            correct: ''
+            correct: '',
+            jawaban: ''
         },
         {
             id_pertanyaan: 0,
@@ -88,7 +96,8 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             option_c: '',
             option_d: '',
             option_e: '',
-            correct: ''
+            correct: '',
+            jawaban: ''
         },
         {
             id_pertanyaan: 0,
@@ -98,9 +107,12 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             option_c: '',
             option_d: '',
             option_e: '',
-            correct: ''
-        },
+            correct: '',
+            jawaban: ''
+        }
     ];
+
+    PageState: 'list' | 'guru' | 'siswa' | 'hasil' = 'list';
 
     IsShowForm = false;
     IsFormEdit = false;
@@ -113,8 +125,9 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(
         private _formBuilder: FormBuilder,
-        private _kelasService: KelasService,
         private _kuisService: KuisService,
+        private _kelasService: KelasService,
+        private _siswaService: SiswaService,
         private _messageService: MessageService,
         private _authenticationService: AuthenticationService,
     ) {
@@ -176,6 +189,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     if (localStorage.getItem("_LKPD_SK_")) {
                         this.IsShowForm = true;
+                        this.PageState = 'siswa';
                         this.SelectedKuis = JSON.parse(localStorage.getItem("_LKPD_SK_") as any);
                         this.Pertanyaan = JSON.parse(localStorage.getItem("_LKPD_QS_") as any);
                         this.SelectedPertanyaan = JSON.parse(localStorage.getItem("_LKPD_QSS_") as any);
@@ -194,6 +208,19 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             })
     }
 
+    handleChangeKelas(args: any) {
+        if (args.value) {
+            this._siswaService
+                .getAll({ id_kelas: args.value })
+                .pipe(takeUntil(this.Destroy$))
+                .subscribe((result) => {
+                    if (result.status) {
+                        this.SiswaDatasource = result.data;
+                    }
+                })
+        }
+    }
+
     handleSaveKuis(args: any) {
         let { id_kuis, is_active, ...payload } = args;
         payload.pertanyaan = this.Pertanyaan;
@@ -208,6 +235,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.Form.reset();
                     this.IsFormEdit = false;
                     this.IsShowForm = false;
+                    this.PageState = 'list';
                     this.getAllKuis();
                 }
             })
@@ -221,6 +249,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (result.status) {
                     this.IsFormEdit = true;
                     this.IsShowForm = true;
+                    this.PageState = 'guru';
                     this.Form.patchValue(result.data);
                     this.Pertanyaan = result.data.pertanyaan;
                 }
@@ -229,6 +258,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
 
     handleBackToListKuis() {
         this.IsShowForm = false;
+        this.PageState = 'list';
         this.IsFormEdit = false;
         localStorage.removeItem("_LKPD_SK_");
         localStorage.removeItem("_LKPD_QS_");
@@ -254,6 +284,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.Form.reset();
                     this.IsFormEdit = false;
                     this.IsShowForm = false;
+                    this.PageState = 'list';
                     this.getAllKuis();
                 }
             })
@@ -290,8 +321,14 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe((result) => {
                 if (result.status) {
                     this.IsShowForm = true;
+                    this.PageState = 'siswa';
                     this.SelectedKuis = result.data;
-                    this.Pertanyaan = result.data.pertanyaan;
+                    this.Pertanyaan = result.data.pertanyaan.map((item: any) => {
+                        return {
+                            ...item,
+                            jawaban: ""
+                        }
+                    });
                     this.SelectedPertanyaan = this.Pertanyaan[this.SelectedIndexPertanyaan];
                     localStorage.setItem("_LKPD_SK_", JSON.stringify(this.SelectedKuis));
                     localStorage.setItem("_LKPD_QS_", JSON.stringify(this.Pertanyaan));
@@ -302,48 +339,88 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     handleSubmitPertanyaan(args: any) {
-        this.SelectedPertanyaan = {
-            ...this.Pertanyaan[this.SelectedIndexPertanyaan],
-            jawaban: args.jawaban
-        };
+        const userData = JSON.parse(localStorage.getItem('_LPKDUD_') as any)
 
-        localStorage.setItem("_LKPD_QSS_", JSON.stringify(this.SelectedPertanyaan));
+        const payload = args.map((item: any) => {
+            return {
+                id_pertanyaan: item.id_pertanyaan,
+                id_siswa: userData.id_siswa,
+                jawaban: item.jawaban
+            }
+        });
 
-        this.onSaveJawaban(this.SelectedPertanyaan)
+        this._kuisService
+            .submitJawaban({
+                id_kuis: this.SelectedKuis.id_kuis,
+                detail_jawaban: payload
+            })
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
                 if (result.status) {
                     this._messageService.clear();
                     this._messageService.add({ severity: 'success', summary: 'Berhasil!', detail: 'Jawaban Berhasil Disimpan' });
-
-                    // Move to next question
-                    if (this.SelectedIndexPertanyaan < this.Pertanyaan.length - 1) {
-                        this.SelectedIndexPertanyaan += 1;
-                        localStorage.setItem("_LKPD_QSSI_", JSON.stringify(this.SelectedIndexPertanyaan));
-
-                        // Update selected question
-                        this.SelectedPertanyaan = this.Pertanyaan[this.SelectedIndexPertanyaan];
-                        localStorage.setItem("_LKPD_QSS_", JSON.stringify(this.SelectedPertanyaan));
-                    } else {
-                        this.SelectedIndexPertanyaan = this.Pertanyaan.length - 1;
-                        localStorage.setItem("_LKPD_QSSI_", JSON.stringify(this.SelectedIndexPertanyaan));
-                        this.handleBackToListKuis();
-                    }
+                    this.handleBackToListKuis();
                 }
             })
     }
 
-    private onSaveJawaban(data: any) {
-        !environment.production && console.log("answer =>", data);
+    handleLihatHasil(args: any) {
+        this._kuisService
+            .getById(args.id_kuis)
+            .pipe(takeUntil(this.Destroy$))
+            .subscribe((result) => {
+                if (result.status) {
+                    this.IsShowForm = true;
+                    this.PageState = 'hasil';
+                    this.SelectedKuis = result.data;
+                    this.Pertanyaan = [];
+                    this.getAllSiswa(result.data.id_kelas)
+                }
+            })
+    }
 
-        const userData = JSON.parse(localStorage.getItem("_LPKDUD_") as any);
+    private getAllSiswa(id_kelas: any) {
+        this._siswaService
+            .getAll({ id_kelas: id_kelas })
+            .pipe(takeUntil(this.Destroy$))
+            .subscribe((result) => {
+                if (result.status) {
+                    this.SiswaDatasource = result.data;
+                }
+            })
+    }
 
+    handleChangeSiswa(args: any) {
+        if (args.value) {
+            this._kuisService
+                .getAnswerSiswa(this.SelectedKuis.id_kuis, args.value)
+                .pipe(takeUntil(this.Destroy$))
+                .subscribe((result) => {
+                    if (result.status) {
+                        console.log(result.data);
+                        this.Pertanyaan = result.data.pertanyaan;
+                        this.SelectedSiswa = args.value;
+                    }
+                })
+        }
+    }
+
+    handlePenilaianSiswa(args: any, is_correct: boolean) {
         const payload = {
-            id_pertanyaan: data.id_pertanyaan,
-            jawaban: data.jawaban,
-            id_siswa: userData.id_siswa
+            id_kuis: this.SelectedKuis.id_kuis,
+            id_siswa: this.SelectedSiswa,
+            id_jawaban: args.id_jawaban,
+            is_correct: is_correct
         };
 
-        return this._kuisService.submitJawaban(payload)
+        this._kuisService
+            .penilaianJawaban(payload)
+            .pipe(takeUntil(this.Destroy$))
+            .subscribe((result) => {
+                if (result.status) {
+                    this.handleChangeSiswa({ value: this.SelectedSiswa })
+                }
+            });
     }
+
 }

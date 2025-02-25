@@ -9,7 +9,6 @@ import { ButtonModule } from 'primeng/button';
 import { NgIf } from '@angular/common';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-authentication',

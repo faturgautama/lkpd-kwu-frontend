@@ -27,6 +27,7 @@ export namespace KuisModel {
         option_d: string;
         option_e: string;
         correct: string;
+        jawaban?: string;
         create_at?: Date;
         create_by?: number;
     }
