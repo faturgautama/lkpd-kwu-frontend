@@ -44,7 +44,7 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
 
     Destroy$ = new Subject();
 
-    PageState: 'list' | 'guru' | 'siswa' | 'hasil' = 'list';
+    PageState: 'list' | 'guru' | 'siswa' | 'hasil' | 'preview' = 'list';
 
     Profile$ = this._authenticationService
         .Profile$
@@ -333,7 +333,7 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log("payload =>", args);
     }
 
-    handleClickButtonEdit(args: any) {
+    handleClickButtonEdit(args: any, pagestate?: any) {
         this._proyekService
             .getById(args)
             .pipe(takeUntil(this.Destroy$))
@@ -341,10 +341,15 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (result.status) {
                     this.IsFormEdit = true;
                     this.IsShowForm = true;
-                    this.PageState = 'guru';
+                    this.PageState = pagestate ? pagestate : 'guru';
+
+                    if (pagestate == 'preview') {
+                        this.Hasil = { hasil: result.data.deskripsi };
+                    }
+
                     this.Form.patchValue(result.data);
 
-                    this.handleChangeKelas({ value: result.data.id_kelas })
+                    this.handleChangeKelas({ value: result.data.id_kelas });
 
                     setTimeout(() => {
                         this.Kelompok = result.data.kelompok_proyek.map((item: any) => {
@@ -401,10 +406,8 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     handlePreviewProyek(id_proyek: any) {
-        this.handleClickButtonEdit(id_proyek);
         this.IsShowHasil = true;
-        this.PageState = 'hasil';
-        this.IsGuru = false;
+        this.handleClickButtonEdit(id_proyek, 'preview');
     }
 
     handleExitPreview() {
@@ -412,6 +415,7 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
         this.IsShowHasil = false;
         this.Hasil = null;
         this.IsFormEdit = false;
+        this.PageState = 'list';
         this.getAllProyek();
     }
 
