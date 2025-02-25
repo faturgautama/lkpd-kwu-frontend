@@ -50,8 +50,8 @@
         <div *ngIf="!IsShowForm" class="flex flex-col gap-3 w-full">
             @for (item of Proyek; track $index) {
             <div
-                class="flex flex-row justify-between items-center w-full p-3 rounded-lg border border-dashed border-gray-300">
-                <div class="flex flex-col">
+                class="flex flex-col justify-between items-center w-full p-3 rounded-lg border border-dashed border-gray-300">
+                <div class="flex flex-col w-full">
                     <p class="text-lg text-emerald-500 font-bold">
                         {{ item.judul }}
                     </p>
@@ -62,27 +62,45 @@
                         {{ item.create_at | date: 'dd-MM-yyyy HH:mm' }}
                     </p>
 
-                    <div *ngIf="IsGuru"
+                    <!-- <div *ngIf="IsGuru"
                         class="flex w-[5.5rem] items-center justify-center px-2 py-1 bg-sky-100 text-sky-600 rounded-lg mb-1"
                         (click)="handleLihatHasil(item.id_proyek)">
                         <p class="font-semibold text-xs">
                             Lihat Hasil
                         </p>
-                    </div>
+                    </div> -->
                 </div>
 
-                <div class="flex gap-5 items-center">
-                    <span *ngIf="IsGuru" class="text-yellow-500" (click)="handleClickButtonEdit(item.id_proyek)">
-                        <i class="pi pi-pencil"></i>
+                <div class="flex w-full gap-3 items-center">
+                    <span *ngIf="IsGuru" class="flex items-center bg-yellow-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
+                        (click)="handleClickButtonEdit(item.id_proyek)">
+                        <i class="pi pi-pencil text-yellow-600" style="font-size: 12px"></i>
+                        <p class="text-sm font-semibold text-yellow-600">Edit</p>
                     </span>
 
-                    <span *ngIf="IsGuru" class="text-red-500" (click)="handleDeleteProyek(item)">
-                        <i class="pi pi-trash"></i>
+                    <span *ngIf="IsGuru" class="flex items-center bg-red-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
+                        (click)="handleDeleteProyek(item)">
+                        <i class="pi pi-trash text-red-600" style="font-size: 12px"></i>
+                        <p class="text-sm font-semibold text-red-600">Hapus</p>
                     </span>
 
-                    <span *ngIf="!IsGuru" class="text-yellow-500" (click)="handleLihatHasil(item.id_proyek)">
-                        <i class="pi pi-file-edit"></i>
+                    <span *ngIf="!IsGuru" class="flex items-center bg-sky-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
+                        (click)="handleLihatHasil(item.id_proyek)">
+                        <i class="pi pi-info text-sky-600" style="font-size: 12px"></i>
+                        <p class="text-sm font-semibold text-sky-600">Hasil</p>
                     </span>
+
+                    <span *ngIf="IsGuru" class="flex items-center bg-sky-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
+                        (click)="handleLihatHasil(item.id_proyek)">
+                        <i class="pi pi-info text-sky-600" style="font-size: 12px"></i>
+                        <p class="text-sm font-semibold text-sky-600">Nilai</p>
+                    </span>
+                    <!-- 
+                    <span *ngIf="IsGuru" class="flex items-center bg-gray-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
+                        (click)="handlePreviewProyek(item.id_proyek)">
+                        <i class="pi pi-eye text-gray-600" style="font-size: 12px"></i>
+                        <p class="text-sm font-semibold text-gray-600">Preview</p>
+                    </span> -->
                 </div>
             </div>
             }
@@ -396,6 +414,40 @@
                         mode="decimal" [minFractionDigits]="2">
                     </p-inputNumber>
                 </div>
+
+                <!-- Appresiasi -->
+                <div class="flex flex-col gap-1">
+                    <p class="text-sm text-gray-700 font-medium">
+                        Appresiasi
+                    </p>
+
+                    <div class="flex flex-wrap gap-3">
+                        <div class="flex align-items-center">
+                            <p-radioButton name="appresiasi" value="Good Job!" [(ngModel)]="Hasil.appresiasi"
+                                inputId="ingredient1" />
+                            <label for="ingredient1" class="ml-2 text-sm text-gray-700">
+                                Good Job!
+                            </label>
+                        </div>
+
+                        <div class="flex align-items-center">
+                            <p-radioButton name="appresiasi" value="Cukup Memuaskan, Pertahankan!"
+                                [(ngModel)]="Hasil.appresiasi" inputId="ingredient2" />
+                            <label for="ingredient2" class="ml-2 text-sm text-gray-700">
+                                Cukup Memuaskan, Pertahankan!
+                            </label>
+                        </div>
+
+                        <div class="flex align-items-center">
+                            <p-radioButton name="appresiasi" value="⁠Teruslah Belajar Dengan Semangat!"
+                                [(ngModel)]="Hasil.appresiasi" inputId="ingredient3" />
+                            <label for="ingredient3" class="ml-2 text-sm text-gray-700">
+                                ⁠Teruslah Belajar Dengan Semangat!
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
             <div class="flex flex-row justify-end items-center gap-3 w-full">
@@ -422,8 +474,7 @@
             </div>
 
             <div class="flex flex-row justify-end items-center gap-3 w-full">
-                <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
-                    (onClick)="IsShowForm = false; IsShowHasil = false; Hasil = null; IsFormEdit = false">
+                <p-button severity="secondary" label="Kembali" styleClass="p-button-sm" (onClick)="handleExitPreview()">
                 </p-button>
 
                 <p-button severity="info" label="Unduh" styleClass="p-button-sm" (onClick)="handleUnduhProyek(Hasil)">

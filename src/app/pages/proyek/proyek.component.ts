@@ -44,6 +44,8 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
 
     Destroy$ = new Subject();
 
+    PageState: 'list' | 'guru' | 'siswa' | 'hasil' = 'list';
+
     Profile$ = this._authenticationService
         .Profile$
         .pipe(takeUntil(this.Destroy$));
@@ -321,6 +323,7 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.Form.reset();
                     this.IsFormEdit = false;
                     this.IsShowForm = false;
+                    this.PageState = 'list';
                     this.getAllProyek();
                 }
             })
@@ -338,6 +341,7 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (result.status) {
                     this.IsFormEdit = true;
                     this.IsShowForm = true;
+                    this.PageState = 'guru';
                     this.Form.patchValue(result.data);
 
                     this.handleChangeKelas({ value: result.data.id_kelas })
@@ -389,10 +393,26 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
     handleLihatHasil(id_proyek: any) {
         this.handleClickButtonEdit(id_proyek);
         this.IsShowHasil = true;
+        this.PageState = 'hasil';
 
         if (!this.IsGuru) {
             this.getDetailKelompok(id_proyek);
         }
+    }
+
+    handlePreviewProyek(id_proyek: any) {
+        this.handleClickButtonEdit(id_proyek);
+        this.IsShowHasil = true;
+        this.PageState = 'hasil';
+        this.IsGuru = false;
+    }
+
+    handleExitPreview() {
+        this.IsShowForm = false;
+        this.IsShowHasil = false;
+        this.Hasil = null;
+        this.IsFormEdit = false;
+        this.getAllProyek();
     }
 
     private getDetailKelompok(id_proyek: number) {
@@ -427,6 +447,7 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
             nilai_pertemuan_2: hasil.nilai_pertemuan_2,
             nilai_pertemuan_3: hasil.nilai_pertemuan_3,
             nilai_pertemuan_4: hasil.nilai_pertemuan_3,
+            appresiasi: hasil.appresiasi
         };
 
         this._proyekService
