@@ -339,17 +339,23 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
                 if (result.status) {
+                    this.SelectedProyek = result.data;
+
+                    console.log("selected proyek =>", result.data);
+
                     this.IsFormEdit = true;
                     this.IsShowForm = true;
-                    this.PageState = pagestate ? pagestate : 'guru';
 
                     if (pagestate == 'preview') {
+                        this.PageState = pagestate;
                         this.Hasil = { hasil: result.data.deskripsi };
                     }
 
                     this.Form.patchValue(result.data);
 
                     this.handleChangeKelas({ value: result.data.id_kelas });
+
+                    console.log("hasil =>", this.Hasil);
 
                     setTimeout(() => {
                         this.Kelompok = result.data.kelompok_proyek.map((item: any) => {
@@ -368,8 +374,6 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
                             }
                         });
                     }, 1000);
-
-                    this.SelectedProyek = result.data;
                 }
             })
     }
@@ -396,7 +400,7 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     handleLihatHasil(id_proyek: any) {
-        this.handleClickButtonEdit(id_proyek);
+        this.handleClickButtonEdit(id_proyek, 'siswa');
         this.IsShowHasil = true;
         this.PageState = 'hasil';
 
@@ -427,15 +431,22 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
                 if (result.status) {
-                    if (result.data.hasil.includes('Belum Ada Hasil')) {
-                        const newData = {
-                            ...result.data,
-                            hasil: this.SelectedProyek.deskripsi,
-                        }
-                        this.Hasil = newData;
-                    } else {
-                        this.Hasil = result.data;
-                    }
+                    setTimeout(() => {
+                        if (result.data.hasil.includes('Belum Ada Hasil') || result.data.hasil.length < 1) {
+                            console.log("selected proyek =>", this.SelectedProyek);
+
+                            const newData = {
+                                ...result.data,
+                                hasil: this.SelectedProyek.deskripsi,
+                            };
+                            this.Hasil = newData;
+                        } else {
+                            this.Hasil = result.data;
+                        };
+
+                        console.log("hasil =>", this.Hasil);
+                    }, 2000);
+
                 }
             })
     }
