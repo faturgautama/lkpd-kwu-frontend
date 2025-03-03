@@ -40,4 +40,8 @@ export class NilaiService {
                 })
             )
     }
+
+    syncToSheet(): Observable<any> {
+        return this._httpOperationService.getRequest(`${environment.apiUrl}/nilai/sync-sheet`);
+    }
 }

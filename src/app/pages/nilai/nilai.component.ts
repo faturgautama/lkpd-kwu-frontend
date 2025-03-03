@@ -47,6 +47,7 @@ export class NilaiComponent implements OnInit, OnDestroy {
 
                 if (this.IsGuru) {
                     this.getAllKelas();
+                    this.syncToSheet();
                 } else {
                     this.getNilaiPerSiswa();
                 }
@@ -95,6 +96,17 @@ export class NilaiComponent implements OnInit, OnDestroy {
             .subscribe((result) => {
                 if (result.status) {
                     this.Siswa = [result.data];
+                }
+            })
+    }
+
+    private syncToSheet() {
+        this._nilaiService
+            .syncToSheet()
+            .pipe(takeUntil(this.Destroy$))
+            .subscribe((result) => {
+                if (result.status) {
+                    console.log("result =>", result);
                 }
             })
     }
