@@ -1,9 +1,10 @@
 {
-    "name": "LKPD Mobile",
-    "short_name": "LKPD Mobile",
+    "name": "E-Module",
+    "short_name": "E-Module Mobile",
     "theme_color": "#1976d2",
     "background_color": "#fafafa",
     "display": "standalone",
+    "orientation": "landscape",
     "scope": "./",
     "start_url": "./",
     "icons": [

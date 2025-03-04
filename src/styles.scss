@@ -10,6 +10,26 @@ body {
   overflow-x: hidden !important;
 }
 
+@media (orientation: portrait) {
+  .root {
+    display: none;
+  }
+
+  .root-portrait {
+    display: grid;
+  }
+}
+
+@media (orientation: landscape) {
+  .root {
+    display: grid;
+  }
+
+  .root-portrait {
+    display: none;
+  }
+}
+
 .font-lora {
   font-family: "Montserrat", serif !important;
 }
