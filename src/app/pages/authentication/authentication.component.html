@@ -1,94 +1,94 @@
 <app-main>
-    <div class="flex flex-col w-full relative">
+    <div class="flex flex-col w-full justify-center items-center bg-sky-500 ">
         <!-- Header -->
-        <div class="flex flex-col w-full h-[50%] bg-emerald-500 px-5 py-20 ">
-            <p class="text-gray-50 text-6xl font-extrabold text-center">
-                LKPD
+        <div class="flex flex-col w-full px-5 mb-5">
+            <p class="text-gray-50 text-2xl font-extrabold text-center">
+                E - Module
             </p>
-            <p class="text-emerald-100 text-lg text-center">
+            <p class="text-emerald-100 text-base text-center">
                 Lembar Kerja Peserta Didik
             </p>
         </div>
 
         <!-- Form -->
-        <div [formGroup]="Form" class="flex flex-col rounded-xl shadow bg-white p-5 fixed"
-            style="width: calc(100vw - 3rem); left: 50%; transform: translateX(-50%); top: calc(100vh - 71%);">
-
-            <!-- Header -->
-            <div class="flex flex-col w-full pb-3 mb-3 border-b border-dashed border-gray-400 border-t-0 border-x-0">
-                <p class="text-2xl font-extrabold text-gray-700">
-                    {{ IsRegister ? 'Register' : 'Sign In' }}
-                </p>
-
-                <p class="text-sm text-gray-600">
-                    {{ IsRegister ? 'Daftarkan' :'Masuk ke'}} akun anda
-                </p>
-            </div>
-
+        <div [formGroup]="Form" class="flex flex-col rounded-xl shadow bg-white p-5 w-10/12">
             <!-- Toggle -->
-            <div class="grid grid-cols-2 w-full gap-4 mb-4">
+            <div class="grid grid-cols-2 w-full gap-4 mb-5">
                 <div class="grid w-full">
                     <p-button styleClass="" severity="secondary"
-                        [styleClass]="IsGuru ? 'p-button-sm bg-emerald-500 text-white text-sm w-full' : 'p-button-sm secondary text-sm w-full'"
+                        [styleClass]="IsGuru ? 'p-button-sm bg-sky-500 text-white text-sm w-full' : 'p-button-sm secondary text-sm w-full'"
                         label="Saya Guru" (onClick)="handleToggleIsGuru(true)">
                     </p-button>
                 </div>
 
                 <div class="grid w-full">
                     <p-button styleClass="p-button-sm" severity="secondary"
-                        [styleClass]="!IsGuru ? 'p-button-sm bg-emerald-500 text-white text-sm w-full' : 'p-button-sm secondary text-sm w-full'"
+                        [styleClass]="!IsGuru ? 'p-button-sm bg-sky-500 text-white text-sm w-full' : 'p-button-sm secondary text-sm w-full'"
                         label="Saya Siswa" (onClick)="handleToggleIsGuru(false)">
                     </p-button>
                 </div>
             </div>
 
             <!-- Nama Lengkap -->
-            <div *ngIf="IsRegister" class="flex flex-col gap-1 w-full mb-4">
-                <p class="text-base text-gray-700 font-medium">
-                    Nama Lengkap
-                </p>
-                <input pInputText class="w-full" placeholder="Masukkan nama lengkap anda disini"
-                    formControlName="nama_lengkap">
+            <div *ngIf="IsRegister" class="flex flex-row items-center gap-1 w-full mb-2">
+                <div class="w-3/12">
+                    <p class="text-sm text-gray-700 font-medium">
+                        Nama Lengkap
+                    </p>
+                </div>
+                <div class="w-9/12">
+                    <input pInputText class="w-full p-inputtext-sm" placeholder="Masukkan nama lengkap anda disini"
+                        formControlName="nama_lengkap">
+                </div>
             </div>
 
             <!-- Email -->
-            <div class="flex flex-col gap-1 w-full mb-4">
-                <p class="text-base text-gray-700 font-medium">
-                    Email
-                </p>
-                <input pInputText class="w-full" placeholder="Masukkan email anda disini" formControlName="email">
+            <div class="flex flex-row gap-1 w-full mb-2">
+                <div class="w-3/12">
+                    <p class="text-sm text-gray-700 font-medium">
+                        Email
+                    </p>
+                </div>
+                <div class="w-9/12">
+                    <input pInputText class="w-full" placeholder="Masukkan email anda disini" formControlName="email">
+                </div>
             </div>
 
             <!-- Password -->
-            <div class="flex flex-col gap-1 w-full mb-8">
-                <p class="text-base text-gray-700 font-medium">
-                    Password
-                </p>
-                <p-password styleClass="w-full" [feedback]="false" placeholder="Masukkan password anda disini"
-                    [toggleMask]="true" formControlName="password">
-                </p-password>
+            <div class="flex flex-row gap-1 w-full mb-4">
+                <div class="w-3/12">
+                    <p class="text-sm text-gray-700 font-medium">
+                        Password
+                    </p>
+                </div>
+                <div class="w-9/12">
+                    <p-password styleClass="w-full" [feedback]="false" placeholder="Masukkan password anda disini"
+                        [toggleMask]="true" formControlName="password">
+                    </p-password>
+                </div>
             </div>
 
-            <div *ngIf="!IsRegister" class="grid w-full mb-3">
-                <p-button [disabled]="Form.get('email')?.invalid && Form.get('password')?.invalid" styleClass="w-full"
-                    severity="info" label="Sign In" (onClick)="handleSignIn(Form.value)">
+            <div *ngIf="!IsRegister" class="grid w-full mb-2">
+                <p-button [disabled]="Form.get('email')?.invalid && Form.get('password')?.invalid"
+                    styleClass="w-full p-button-sm" severity="info" label="Sign In"
+                    (onClick)="handleSignIn(Form.value)">
                 </p-button>
             </div>
 
-            <div *ngIf="IsRegister" class="grid w-full mb-3">
+            <div *ngIf="IsRegister" class="grid w-full mb-2">
                 <p-button [disabled]="Form.invalid" styleClass="w-full" severity="info" label="Register"
                     (onClick)="handleRegister(Form.value)">
                 </p-button>
             </div>
 
-            <p *ngIf="!IsRegister" class="text-sm text-gray-700 font-medium text-center" (click)="IsRegister = true">
+            <p *ngIf="!IsRegister" class="text-xs text-gray-700 font-medium text-center" (click)="IsRegister = true">
                 Belum Memiliki Akun?
                 <span class="text-emerald-500 cursor-pointer">
                     Register Disini
                 </span>
             </p>
 
-            <p *ngIf="IsRegister" class="text-sm text-gray-700 font-medium text-center" (click)="IsRegister = false">
+            <p *ngIf="IsRegister" class="text-xs text-gray-700 font-medium text-center" (click)="IsRegister = false">
                 Sudah Memiliki Akun?
                 <span class="text-emerald-500 cursor-pointer">
                     Sign In Disini
@@ -96,16 +96,16 @@
             </p>
         </div>
 
-        <div class="bg-gray-200 flex flex-col w-full justify-end items-center h-[50%]">
-            <p class="text-gray-700 text-sm text-center">
+        <!-- <div class="bg-gray-200 flex flex-col w-full justify-end items-center">
+            <p class="text-gray-700 text-xs text-center">
                 <span class="font-semibold">Ardiana Trisya Rahadiva</span>
             </p>
-            <p class="text-gray-700 text-sm text-center">
+            <p class="text-gray-700 text-xs text-center">
                 Fakultas Ekonomi dan Bisnis
             </p>
-            <p class="text-gray-700 text-sm text-center mb-5">
+            <p class="text-gray-700 text-xs text-center mb-5">
                 Universitas Negeri Semarang
             </p>
-        </div>
+        </div> -->
     </div>
 </app-main>
