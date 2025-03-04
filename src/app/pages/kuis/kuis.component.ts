@@ -76,39 +76,6 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             option_e: '',
             correct: '',
             jawaban: ''
-        },
-        {
-            id_pertanyaan: 0,
-            pertanyaan: '',
-            option_a: '',
-            option_b: '',
-            option_c: '',
-            option_d: '',
-            option_e: '',
-            correct: '',
-            jawaban: ''
-        },
-        {
-            id_pertanyaan: 0,
-            pertanyaan: '',
-            option_a: '',
-            option_b: '',
-            option_c: '',
-            option_d: '',
-            option_e: '',
-            correct: '',
-            jawaban: ''
-        },
-        {
-            id_pertanyaan: 0,
-            pertanyaan: '',
-            option_a: '',
-            option_b: '',
-            option_c: '',
-            option_d: '',
-            option_e: '',
-            correct: '',
-            jawaban: ''
         }
     ];
 
