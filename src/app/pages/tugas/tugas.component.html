@@ -47,8 +47,8 @@
                         class="p-inputtext-sm w-full" [(ngModel)]="SelectedPertanyaan.jawaban"></textarea>
                 </div>
 
-                <div *ngIf="handleGetVoiceNoteSoal(SelectedPertanyaan)" class="flex items-center">
-                    <div class="voice-note flex gap-2 mb-2">
+                <div *ngIf="handleGetVoiceNoteSoal(SelectedPertanyaan)" class="flex w-full items-center">
+                    <div *ngIf="!SelectedPertanyaan.jawaban" class="voice-note flex gap-2 mb-2">
                         <p-button severity="info" label="🎙️ Mulai Merekam" styleClass="p-button-sm"
                             (click)="startRecording()" [disabled]="isRecording">
                         </p-button>
@@ -58,7 +58,11 @@
                         </p-button>
                     </div>
 
-                    <div *ngIf="SelectedPertanyaan.jawaban" class="grid gap-2 w-full">
+                    <div *ngIf="SelectedPertanyaan.jawaban" class="flex w-full items-center gap-2">
+                        <p-button severity="danger" label="Hapus Rekaman" styleClass="p-button-sm"
+                            (click)="SelectedPertanyaan.jawaban = ''">
+                        </p-button>
+
                         <audio [src]="SelectedPertanyaan.jawaban" controls></audio>
                     </div>
                 </div>

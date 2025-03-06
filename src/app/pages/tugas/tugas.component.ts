@@ -473,7 +473,7 @@ export class TugasComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     handleGetVoiceNoteSoal(args: any) {
-        return args.pertanyaan.include("<p>") ? true : false;
+        return args.pertanyaan.includes("<p>") ? true : false;
     }
 
     startRecording() {

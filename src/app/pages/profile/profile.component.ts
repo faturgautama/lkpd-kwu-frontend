@@ -37,6 +37,18 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
 
     Version = environment.version;
 
+    ProfileMenu: any[] = [
+        { id: 'profile', menu: 'Profile' },
+        { id: 'petunjuk_penggunaan', menu: 'Petunjuk Penggunaan' },
+        { id: 'tentang_aplikasi', menu: 'Tentang Aplikasi' },
+        { id: 'fitur', menu: 'Fitur' },
+        { id: 'identitas_pengembang', menu: 'Identitas Pengembang' },
+    ];
+
+    SelectedIndexProfile = 0;
+
+    SelectedMenuProfile: any = this.ProfileMenu[0]
+
     constructor(
         private _router: Router,
         private _formBuilder: FormBuilder,
@@ -74,6 +86,11 @@ export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.IsGuru = result.data.is_guru;
                 this.Form.patchValue(result.data);
             })
+    }
+
+    handleClickMenu(args: any, index: number) {
+        this.SelectedIndexProfile = index;
+        this.SelectedMenuProfile = args;
     }
 
     handleUpdateProfile(args: any) {
