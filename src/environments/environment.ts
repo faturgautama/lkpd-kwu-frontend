@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:3056/api/v1',
+    apiUrl: 'https://lkpd.fgdevstudio.web.id/api/v1',
     sandbox: true,
     version: 'v0.0.1-alpha'
 };

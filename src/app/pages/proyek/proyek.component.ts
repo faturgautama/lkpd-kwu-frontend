@@ -333,7 +333,7 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log("payload =>", args);
 
         this._proyekService
-        .update(payload)
+        .update(args)
         .pipe(takeUntil(this.Destroy$))
         .subscribe((result) => {
             if (result.status) {
