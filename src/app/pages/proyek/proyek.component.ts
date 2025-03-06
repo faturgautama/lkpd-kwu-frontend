@@ -331,6 +331,17 @@ export class ProyekComponent implements OnInit, AfterViewInit, OnDestroy {
 
     handleUpdateProyek(args: any) {
         console.log("payload =>", args);
+
+        this._proyekService
+        .update(payload)
+        .pipe(takeUntil(this.Destroy$))
+        .subscribe((result) => {
+            if (result.status) {
+                this._messageService.clear();
+                this._messageService.add({ severity: 'success', summary: 'Berhasil', detail: 'Proyek berhasil dihapus' });
+                this.handleClickButtonEdit(this.Form.get('id_proyek')?.value)
+            }
+        })
     }
 
     handleClickButtonEdit(args: any, pagestate?: any) {
