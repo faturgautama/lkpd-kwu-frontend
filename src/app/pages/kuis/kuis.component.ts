@@ -17,6 +17,7 @@ import { KelasService } from 'src/app/services/kelas.service';
 import { KuisService } from 'src/app/services/kuis.service';
 import { environment } from 'src/environments/environment';
 import { SiswaService } from 'src/app/services/siswa.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-kuis',
@@ -52,7 +53,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
 
     SelectedSiswa: any;
 
-    Kuis: KuisModel.IKuis[] = [];
+    Kuis: any;
 
     Pertanyaan: any[] = [
         {
@@ -114,6 +115,8 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
 
     PageState: 'list' | 'guru' | 'siswa' | 'hasil' = 'list';
 
+    KategoriKuis: 'PRE TEST' | 'POST TEST' = this._router.url.includes('kuis') ? 'PRE TEST' : 'POST TEST';
+
     IsShowForm = false;
     IsFormEdit = false;
     Form: FormGroup;
@@ -121,9 +124,10 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
     SelectedKuis: any;
 
     SelectedPertanyaan: any;
-    SelectedIndexPertanyaan = 0;
+    SelectedIndexPertanyaan!: number;
 
     constructor(
+        private _router: Router,
         private _formBuilder: FormBuilder,
         private _kuisService: KuisService,
         private _kelasService: KelasService,
@@ -177,15 +181,15 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
         this.Profile$
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
+                const userData = JSON.parse(localStorage.getItem("_LPKDUD_") as any);
                 this.IsGuru = result.is_guru;
 
                 let query: any = {};
 
                 if (!result.is_guru) {
                     query.id_kelas = result.id_kelas;
-
-                    const userData = JSON.parse(localStorage.getItem("_LPKDUD_") as any);
                     query.id_siswa = userData.id_siswa;
+                    query.kategori = this.KategoriKuis;
 
                     if (localStorage.getItem("_LKPD_SK_")) {
                         this.IsShowForm = true;
@@ -195,6 +199,10 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.SelectedPertanyaan = JSON.parse(localStorage.getItem("_LKPD_QSS_") as any);
                         this.SelectedIndexPertanyaan = JSON.parse(localStorage.getItem("_LKPD_QSSI_") as any);
                     }
+                } else {
+                    query.id_kelas = 1;
+                    query.id_siswa = 1;
+                    query.kategori = this.KategoriKuis;
                 }
 
                 this._kuisService
@@ -202,9 +210,29 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
                     .pipe(takeUntil(this.Destroy$))
                     .subscribe((result) => {
                         if (result.status) {
-                            this.Kuis = result.data;
+                            if (result.data.length) {
+                                this.getDetailKuis(result.data[0].id_kuis, query.id_siswa);
+                            }
                         }
                     })
+            })
+    }
+
+    private getDetailKuis(id_kuis: any, id_siswa: any) {
+        this._kuisService
+            .getAnswerSiswa(id_kuis, id_siswa)
+            .pipe(takeUntil(this.Destroy$))
+            .subscribe((result) => {
+                if (result.data) {
+                    result.data.pertanyaan = result.data.pertanyaan.map((item: any) => {
+                        return {
+                            ...item,
+                            jawaban: item.id_jawaban ? item.jawaban : ''
+                        }
+                    });
+
+                    this.Kuis = result.data;
+                }
             })
     }
 
@@ -341,25 +369,28 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
     handleSubmitPertanyaan(args: any) {
         const userData = JSON.parse(localStorage.getItem('_LPKDUD_') as any)
 
-        const payload = args.map((item: any) => {
+        const detail_jawaban = args.pertanyaan.map((item: any) => {
             return {
                 id_pertanyaan: item.id_pertanyaan,
                 id_siswa: userData.id_siswa,
-                jawaban: item.jawaban
+                jawaban: item.jawaban,
+                correct: item.correct
             }
         });
 
+        const payload = {
+            id_kuis: this.Kuis.id_kuis,
+            detail_jawaban: detail_jawaban
+        };
+
         this._kuisService
-            .submitJawaban({
-                id_kuis: this.SelectedKuis.id_kuis,
-                detail_jawaban: payload
-            })
+            .submitJawaban(payload)
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
                 if (result.status) {
                     this._messageService.clear();
                     this._messageService.add({ severity: 'success', summary: 'Berhasil!', detail: 'Jawaban Berhasil Disimpan' });
-                    this.handleBackToListKuis();
+                    this.getDetailKuis(this.Kuis.id_kuis, userData.id_siswa);
                 }
             })
     }
@@ -423,4 +454,18 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             });
     }
 
+    handleClickSoal(args: any, index: number) {
+        this.SelectedPertanyaan = args;
+        this.SelectedIndexPertanyaan = index;
+    }
+
+    handleNextPrevSoal(action: 'prev' | 'next') {
+        if (action == 'prev') {
+            this.SelectedIndexPertanyaan = this.SelectedIndexPertanyaan - 1;
+            this.SelectedPertanyaan = this.Kuis.pertanyaan[this.SelectedIndexPertanyaan];
+        } else {
+            this.SelectedIndexPertanyaan = this.SelectedIndexPertanyaan + 1;
+            this.SelectedPertanyaan = this.Kuis.pertanyaan[this.SelectedIndexPertanyaan];
+        }
+    }
 }

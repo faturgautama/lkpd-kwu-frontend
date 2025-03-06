@@ -1,18 +1,23 @@
-<div class="flex p-3 w-[100vw] bg-emerald-500 gap-0 items-center">
-    @if (!IsBerandaPage) {
-    <span class="text-white mr-3 cursor-pointer" (click)="handleBackToBeranda()">
-        <i class="pi pi-chevron-left"></i>
-    </span>
-    }
-
-    <p class="text-white text-xl font-bold">
-        LKPD
-    </p>
-
-    <div *ngIf="Profile$ | async as profile" class="flex flex-row items-center gap-2 ml-auto">
-        <p class="text-white text-sm">
-            <i class="pi pi-user" style="font-size: 12px"></i>&nbsp;
-            {{ profile.nama_lengkap }}
+<div class="flex py-2 px-5 w-[100vw] bg-sky-500 gap-0 items-center justify-between">
+    <div class="w-4/12">
+        <p class="text-white text-base font-bold leading-none">
+            E-Modul
+            <br>
+            <span class="text-xs font-semibold text-gray-100">
+                Melakukan Komunikasi Melalui Telepon
+            </span>
         </p>
+    </div>
+
+    <div class="flex flex-row gap-2 w-8/12 justify-end">
+        <!-- Kuis -->
+        <div *ngFor="let item of Menu"
+            class="flex bg-{{ SelectedMenu == item.path ? 'orange' : 'sky' }}-200 justify-center p-2 rounded-lg drop-shadow-md w-2/12 border-2 border-solid border-white cursor-pointer"
+            (click)="handleNavigate(item.path)">
+            <p
+                class="text-sm text-{{ SelectedMenu == item.path ? 'orange-600' : 'gray-100' }} font-semibold text-center">
+                {{ item.caption }}
+            </p>
+        </div>
     </div>
 </div>

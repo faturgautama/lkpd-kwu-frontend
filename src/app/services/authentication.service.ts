@@ -33,6 +33,7 @@ export class AuthenticationService {
             .pipe(
                 tap((result) => {
                     if (result.status) {
+                        result.data.is_guru = result.data.is_guru ? result.data.is_guru : false;
                         this.Profile$.next(result.data);
                     }
                 })
@@ -49,6 +50,7 @@ export class AuthenticationService {
 
     private handleSignIn(data: AuthenticationModel.ILoginResponse) {
         localStorage.clear();
+        data.is_guru = data.is_guru ? data.is_guru : false;
         localStorage.setItem("_LPKDUD_", JSON.stringify(data));
     }
 }

@@ -7,11 +7,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { Subject, takeUntil } from 'rxjs';
 import { MainComponent } from 'src/app/components/layout/main/main.component';
-import { KelasModel } from 'src/app/model/kelas.model';
 import { ReferensiModel } from 'src/app/model/referensi.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { KelasService } from 'src/app/services/kelas.service';
 import { ReferensiService } from 'src/app/services/referensi.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-referensi',
@@ -38,9 +37,10 @@ export class ReferensiComponent implements OnInit, AfterViewInit, OnDestroy {
 
     IsGuru = false;
 
-    KelasDatasource: KelasModel.IKelas[] = [];
-
     Referensi: ReferensiModel.IReferensi[] = [];
+
+    SelectedReferensi: any = this.Referensi[0];
+    SelectedReferensiIndex: number = 0;
 
     IsShowForm = false;
 
@@ -48,11 +48,13 @@ export class ReferensiComponent implements OnInit, AfterViewInit, OnDestroy {
 
     Form: FormGroup;
 
+    SafeUrl!: SafeResourceUrl;
+
     constructor(
+        private _sanitizer: DomSanitizer,
         private _formBuilder: FormBuilder,
-        private _kelasService: KelasService,
-        private _referensiService: ReferensiService,
         private _messageService: MessageService,
+        private _referensiService: ReferensiService,
         private _authenticationService: AuthenticationService,
     ) {
         this.Form = this._formBuilder.group({
@@ -112,15 +114,23 @@ export class ReferensiComponent implements OnInit, AfterViewInit, OnDestroy {
             })
     }
 
-    handleClickButtonEdit(id_referensi: any) {
+    handleClickButtonEdit(args: any, index: any) {
+        this.SelectedReferensi = args;
+        this.SelectedReferensiIndex = index;
+
         this._referensiService
-            .getById(id_referensi)
+            .getById(args.id_referensi)
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
                 if (result.status) {
                     this.IsFormEdit = true;
                     this.IsShowForm = true;
                     this.Form.patchValue(result.data);
+
+                    let videoIdMatch = result.data.link.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]+)/);
+                    let link = `https://www.youtube.com/embed/${videoIdMatch![1]}`;
+
+                    this.SafeUrl = this._sanitizer.bypassSecurityTrustResourceUrl(link);
                 }
             })
     }

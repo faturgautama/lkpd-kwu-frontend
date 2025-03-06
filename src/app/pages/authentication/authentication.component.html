@@ -3,10 +3,10 @@
         <!-- Header -->
         <div class="flex flex-col w-full px-5 mb-5">
             <p class="text-gray-50 text-2xl font-extrabold text-center">
-                E - Module
+                E-Modul
             </p>
             <p class="text-emerald-100 text-base text-center">
-                Lembar Kerja Peserta Didik
+                Melakukan Komunikasi Melalui Telepon
             </p>
         </div>
 
@@ -30,38 +30,23 @@
             </div>
 
             <!-- Nama Lengkap -->
-            <div *ngIf="IsRegister" class="flex flex-row items-center gap-1 w-full mb-2">
-                <div class="w-3/12">
-                    <p class="text-sm text-gray-700 font-medium">
-                        Nama Lengkap
-                    </p>
-                </div>
-                <div class="w-9/12">
+            <div *ngIf="IsRegister" class="flex flex-row items-center gap-1 w-full mb-3">
+                <div class="w-full">
                     <input pInputText class="w-full p-inputtext-sm" placeholder="Masukkan nama lengkap anda disini"
                         formControlName="nama_lengkap">
                 </div>
             </div>
 
             <!-- Email -->
-            <div class="flex flex-row gap-1 w-full mb-2">
-                <div class="w-3/12">
-                    <p class="text-sm text-gray-700 font-medium">
-                        Email
-                    </p>
-                </div>
-                <div class="w-9/12">
+            <div class="flex flex-row gap-1 w-full mb-3">
+                <div class="w-full">
                     <input pInputText class="w-full" placeholder="Masukkan email anda disini" formControlName="email">
                 </div>
             </div>
 
             <!-- Password -->
             <div class="flex flex-row gap-1 w-full mb-4">
-                <div class="w-3/12">
-                    <p class="text-sm text-gray-700 font-medium">
-                        Password
-                    </p>
-                </div>
-                <div class="w-9/12">
+                <div class="w-full">
                     <p-password styleClass="w-full" [feedback]="false" placeholder="Masukkan password anda disini"
                         [toggleMask]="true" formControlName="password">
                     </p-password>
@@ -83,14 +68,14 @@
 
             <p *ngIf="!IsRegister" class="text-xs text-gray-700 font-medium text-center" (click)="IsRegister = true">
                 Belum Memiliki Akun?
-                <span class="text-emerald-500 cursor-pointer">
+                <span class="text-sky-500 cursor-pointer">
                     Register Disini
                 </span>
             </p>
 
             <p *ngIf="IsRegister" class="text-xs text-gray-700 font-medium text-center" (click)="IsRegister = false">
                 Sudah Memiliki Akun?
-                <span class="text-emerald-500 cursor-pointer">
+                <span class="text-sky-500 cursor-pointer">
                     Sign In Disini
                 </span>
             </p>

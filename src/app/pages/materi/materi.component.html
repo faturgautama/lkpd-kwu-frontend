@@ -1,132 +1,22 @@
 <app-main>
-    <div class="grid w-full py-5 px-3">
-        <!-- Banner -->
-        <div class="flex flex-col w-full items-center justify-center rounded-lg bg-emerald-500 p-5 shadow mb-5">
-            <p class="text-sm font-medium text-gray-100 text-center">
-                LKPD - Lembar Kerja Peserta Didik
-            </p>
-            <p class="text-lg font-bold text-white text-center">
-                Materi
-            </p>
-        </div>
-
-        <div class="flex flex-row justify-between w-full items-center mb-5">
-            <!-- Title -->
-            <div class="flex flex-col w-full ">
-                <p class="text-lg font-semibold text-gray-700">
-                    {{ IsShowForm ? 'Tambah / Edit' : 'Daftar'}} Materi
-                </p>
-                <p class="text-sm text-gray-600">
-                    {{ IsShowForm ? 'Tambahkan / edit' : 'Pilih'}} materi dibawah ini
-                </p>
-            </div>
-
-            @if (IsGuru && !IsShowForm) {
-            <p-button severity="secondary" styleClass="p-button-sm bg-emerald-500 text-sm text-white" label="Tambah"
-                (onClick)="IsShowForm = true; Form.reset()">
+    <div class="flex justify-center items-center w-full p-3">
+        <div class="w-1/12 flex justify-center">
+            <p-button *ngIf="SelectedMateriIndex > 0" severity="secondary" styleClass="p-button-sm"
+                icon="pi pi-chevron-left" (onClick)="handleNextPrevMateri('prev')">
             </p-button>
-            }
         </div>
 
-        <!-- List -->
-        <div *ngIf="!IsShowForm" class="flex flex-col gap-3 w-full">
-            @for (item of Materi; track $index) {
-            <div class="flex flex-col w-full p-3 rounded-lg border border-dashed border-gray-300">
-                <div class="flex flex-col w-full mb-3">
-                    <p class="text-sm text-emerald-500 font-bold">
-                        {{ item.judul }}
-                    </p>
-                    <p class="text-xs text-gray-600">
-                        {{ item.create_at | date: 'dd-MM-yyyy HH:mm' }}
-                    </p>
-                </div>
-
-                <div class="flex gap-4 items-center w-full">
-                    <span class="flex items-center bg-emerald-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
-                        (click)="handleOpenMateri(item.id_materi)">
-                        <i class="pi pi-download text-emerald-600" style="font-size: 12px"></i>
-                        <p class="text-sm font-semibold text-emerald-600">Unduh</p>
-                    </span>
-
-                    <span *ngIf="IsGuru" class="flex items-center bg-yellow-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
-                        (click)="handleClickButtonEdit(item.id_materi)">
-                        <i class="pi pi-pencil text-yellow-600" style="font-size: 12px"></i>
-                        <p class="text-sm font-semibold text-yellow-600">Edit</p>
-                    </span>
-
-                    <span *ngIf="IsGuru" class="flex items-center bg-red-100 px-2 py-1 rounded-lg gap-1 shadow-sm"
-                        (click)="handleDeleteMateri(item.id_materi)">
-                        <i class="pi pi-trash text-red-600" style="font-size: 12px"></i>
-                        <p class="text-sm font-semibold text-red-600">Hapus</p>
-                    </span>
-                </div>
+        <div class="w-10/12 flex flex-col gap-2 bg-white rounded-lg p-3">
+            <div *ngIf="SelectedMateri" class="flex flex-col w-full gap-3">
+                <img [src]="SelectedMateri.path" alt="materi" class="w-[85%] mx-auto rounded-md drop-shadow"
+                    style="height: calc(100vh - 7rem);">
             </div>
-            }
         </div>
 
-        <!-- Form -->
-        <div *ngIf="IsShowForm" [formGroup]="Form" class="flex flex-col gap-3 w-full">
-            <!-- Judul -->
-            <div class="flex flex-col gap-1 w-full">
-                <p class="text-base font-medium text-gray-700">
-                    Judul Materi
-                    <span class="text-red-500">*</span>
-                </p>
-                <input type="text" pInputText class="w-full" placeholder="Masukkan judul materi disini"
-                    formControlName="judul">
-
-                <span *ngIf="Form.get('judul')?.touched && Form.get('judul')?.invalid"
-                    class="p-2 rounded-lg bg-red-100 text-red-500 font-semibold text-sm">
-                    Judul materi tidak boleh kosong
-                </span>
-            </div>
-
-            <!-- Kelas -->
-            <div class="flex flex-col gap-1 w-full">
-                <p class="text-base font-medium text-gray-700">
-                    Untuk Kelas
-                    <span class="text-red-500">*</span>
-                </p>
-                <p-dropdown [options]="KelasDatasource" optionValue="id_kelas" optionLabel="kelas"
-                    placeholder="Pilih kelas disini" formControlName="id_kelas" styleClass="w-full" appendTo="body"
-                    [filter]="true">
-                </p-dropdown>
-
-                <span *ngIf="Form.get('id_kelas')?.touched && Form.get('id_kelas')?.invalid"
-                    class="p-2 rounded-lg bg-red-100 text-red-500 font-semibold text-sm">
-                    Kelas tidak boleh kosong
-                </span>
-            </div>
-
-            <!-- File -->
-            <div class="flex flex-col gap-1 w-full mb-4">
-                <p class="text-base font-medium text-gray-700">
-                    File Materi
-                    <span class="text-red-500">*</span>
-                </p>
-                <input type="text" pInputText placeholder="Pilih file materi untuk diupload" class="w-full"
-                    readonly="true" (click)="FileMateriEl.click()" formControlName="file_name">
-
-                <input hidden #FileMateriEl id="fileMateriEl" type="file" pInputText
-                    accept=".ppt,.pptx,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf"
-                    placeholder="Pilih file materi untuk diupload" class="w-full" readonly="true"
-                    (change)="handleChangeFile($event)">
-            </div>
-
-            <div class="flex flex-row justify-end items-center gap-3 w-full">
-                <p-button severity="secondary" label="Kembali" styleClass="p-button-sm"
-                    (onClick)="IsShowForm = false; Form.reset(); IsFormEdit = false">
-                </p-button>
-
-                <p-button *ngIf="!IsFormEdit" severity="secondary" label="Simpan"
-                    styleClass="p-button-sm bg-emerald-500 text-white text-sm" (onClick)="handleSaveMateri(Form.value)">
-                </p-button>
-
-                <p-button *ngIf="IsFormEdit" severity="secondary" label="Update"
-                    styleClass="p-button-sm bg-emerald-500 text-white text-sm"
-                    (onClick)="handleUpdateMateri(Form.value)">
-                </p-button>
-            </div>
+        <div class="w-1/12 flex justify-center">
+            <p-button *ngIf=" SelectedMateriIndex != MateriDatasource.length - 1" severity="secondary"
+                styleClass="p-button-sm" icon="pi pi-chevron-right" (onClick)="handleNextPrevMateri('next')">
+            </p-button>
         </div>
     </div>
 </app-main>

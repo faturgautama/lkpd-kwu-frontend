@@ -50,8 +50,8 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.Form.get('email')?.setValue('');
-        this.Form.get('password')?.setValue('');
+        this.Form.get('email')?.setValue('guru@email.com');
+        this.Form.get('password')?.setValue('1234');
     }
 
     ngOnDestroy(): void {
@@ -63,11 +63,11 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
         this.IsGuru = is_guru;
 
         if (this.IsGuru) {
-            this.Form.get('email')?.setValue('');
-            this.Form.get('password')?.setValue('');
+            this.Form.get('email')?.setValue('guru@email.com');
+            this.Form.get('password')?.setValue('1234');
         } else {
-            this.Form.get('email')?.setValue('');
-            this.Form.get('password')?.setValue('');
+            this.Form.get('email')?.setValue('siswa@email.com');
+            this.Form.get('password')?.setValue('1234');
         }
     }
 

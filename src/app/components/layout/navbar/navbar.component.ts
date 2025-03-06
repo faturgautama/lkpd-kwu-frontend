@@ -23,6 +23,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     IsBerandaPage = true;
 
+    Menu: any[] = [
+        { path: 'kuis', caption: 'Kuis' },
+        { path: 'materi', caption: 'Materi' },
+        { path: 'referensi', caption: 'Referensi' },
+        { path: 'tugas', caption: 'Tugas' },
+        { path: 'profile', caption: 'Profil' },
+    ];
+
+    SelectedMenu: any;
+
     constructor(
         private _router: Router,
         private _activatedRoute: ActivatedRoute,
@@ -37,7 +47,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
+        if (localStorage.getItem("_EMODULMNS_")) {
+            this.SelectedMenu = localStorage.getItem("_EMODULMNS_");
+        }
     }
 
     ngOnDestroy(): void {
@@ -47,5 +59,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
     handleBackToBeranda() {
         this._router.navigateByUrl('/beranda');
+    }
+
+    handleNavigate(url: string) {
+        this.SelectedMenu = url;
+        localStorage.setItem("_EMODULMNS_", url);
+        this._router.navigateByUrl(`/${url}`);
     }
 }

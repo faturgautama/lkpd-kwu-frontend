@@ -32,46 +32,33 @@ export class MateriComponent implements OnInit, AfterViewInit, OnDestroy {
 
     Destroy$ = new Subject();
 
-    Profile$ = this._authenticationService
-        .Profile$
-        .pipe(takeUntil(this.Destroy$));
+    MateriDatasource: any[] = [
+        { id: 0, path: '../../../assets/materi/1.jpg' },
+        { id: 1, path: '../../../assets/materi/2.jpg' },
+        { id: 2, path: '../../../assets/materi/3.jpg' },
+        { id: 3, path: '../../../assets/materi/4.jpg' },
+        { id: 4, path: '../../../assets/materi/5.jpg' },
+        { id: 5, path: '../../../assets/materi/6.jpg' },
+        { id: 6, path: '../../../assets/materi/7.jpg' },
+        { id: 7, path: '../../../assets/materi/8.jpg' },
+        { id: 8, path: '../../../assets/materi/9.jpg' },
+        { id: 9, path: '../../../assets/materi/10.jpg' },
+        { id: 10, path: '../../../assets/materi/11.jpg' },
+        { id: 11, path: '../../../assets/materi/12.jpg' },
+        { id: 12, path: '../../../assets/materi/13.jpg' },
+    ];
 
-    IsGuru = false;
+    SelectedMateri: any = this.MateriDatasource[0];
+    SelectedMateriIndex: number = 0;
 
-    KelasDatasource: KelasModel.IKelas[] = [];
-
-    Materi: MateriModel.IMateri[] = [];
-
-    IsShowForm = false;
-
-    IsFormEdit = false;
-
-    Form: FormGroup;
-
-    constructor(
-        private _formBuilder: FormBuilder,
-        private _kelasService: KelasService,
-        private _materiService: MateriService,
-        private _messageService: MessageService,
-        private _authenticationService: AuthenticationService,
-    ) {
-        this.Form = this._formBuilder.group({
-            id_materi: [0, [Validators.required]],
-            id_kelas: [0, [Validators.required]],
-            judul: ["", [Validators.required]],
-            file_name: ["", [Validators.required]],
-            file_base_64: ["", [Validators.required]],
-        })
-    }
+    constructor() { }
 
     ngOnInit(): void {
-        this.getAllKelas();
+
     }
 
     ngAfterViewInit(): void {
-        setTimeout(() => {
-            this.getAllMateri();
-        }, 500);
+
     }
 
     ngOnDestroy(): void {
@@ -79,139 +66,13 @@ export class MateriComponent implements OnInit, AfterViewInit, OnDestroy {
         this.Destroy$.complete();
     }
 
-    private getAllKelas() {
-        this._kelasService
-            .getAll()
-            .pipe(takeUntil(this.Destroy$))
-            .subscribe((result) => {
-                if (result.status) {
-                    this.KelasDatasource = result.data;
-                }
-            })
-    }
-
-    private getAllMateri() {
-        this.Profile$
-            .pipe(takeUntil(this.Destroy$))
-            .subscribe((result) => {
-                this.IsGuru = result.is_guru;
-
-                let query: any = {};
-
-                if (!result.is_guru) {
-                    query.id_kelas = result.id_kelas;
-                }
-
-                this._materiService
-                    .getAll(query)
-                    .pipe(takeUntil(this.Destroy$))
-                    .subscribe((result) => {
-                        if (result.status) {
-                            this.Materi = result.data;
-                        }
-                    })
-            })
-    }
-
-    handleChangeFile(args: any) {
-        const file = args.target.files[0];
-
-        console.log("file =>", file);
-
-        if (file) {
-            if (file.size / (1024 * 1024) > 10) {
-                this._messageService.clear();
-                this._messageService.add({ severity: 'warning', summary: 'Oops', detail: 'Ukuran file tidak boleh lebih dari 10MB' })
-            } else {
-                const reader = new FileReader();
-
-                reader.onload = () => {
-                    this.Form.get('file_name')?.setValue(file.name);
-
-                    const base64string = (reader.result as string).toString().split(",")[1];
-                    this.Form.get('file_base_64')?.setValue(base64string);
-                };
-
-                reader.readAsDataURL(file);
-            }
+    handleNextPrevMateri(action: 'prev' | 'next') {
+        if (action == 'prev') {
+            this.SelectedMateriIndex = this.SelectedMateriIndex - 1;
+            this.SelectedMateri = this.MateriDatasource[this.SelectedMateriIndex];
+        } else {
+            this.SelectedMateriIndex = this.SelectedMateriIndex + 1;
+            this.SelectedMateri = this.MateriDatasource[this.SelectedMateriIndex];
         }
-    }
-
-    handleSaveMateri(args: any) {
-        const { id_materi, ...payload } = args;
-
-        this._materiService
-            .create(payload)
-            .pipe(takeUntil(this.Destroy$))
-            .subscribe((result) => {
-                if (result.status) {
-                    this._messageService.clear();
-                    this._messageService.add({ severity: 'success', summary: 'Berhasil', detail: 'Materi berhasil disimpan' });
-                    this.Form.reset();
-                    this.IsFormEdit = false;
-                    this.IsShowForm = false;
-                    this.getAllMateri();
-                }
-            })
-    }
-
-    handleClickButtonEdit(id_materi: any) {
-        this._materiService
-            .getById(id_materi)
-            .pipe(takeUntil(this.Destroy$))
-            .subscribe((result) => {
-                if (result.status) {
-                    this.IsFormEdit = true;
-                    this.IsShowForm = true;
-                    this.Form.patchValue(result.data);
-                }
-            })
-    }
-
-    handleUpdateMateri(args: any) {
-        this._materiService
-            .update(args)
-            .pipe(takeUntil(this.Destroy$))
-            .subscribe((result) => {
-                if (result.status) {
-                    this._messageService.clear();
-                    this._messageService.add({ severity: 'success', summary: 'Berhasil', detail: 'Materi berhasil diperbarui' });
-                    this.Form.reset();
-                    this.IsFormEdit = false;
-                    this.IsShowForm = false;
-                    this.getAllMateri();
-                }
-            })
-    }
-
-    handleDeleteMateri(id_materi: number) {
-        this._materiService
-            .delete(id_materi)
-            .pipe(takeUntil(this.Destroy$))
-            .subscribe((result) => {
-                if (result.status) {
-                    this._messageService.clear();
-                    this._messageService.add({ severity: 'success', summary: 'Berhasil', detail: 'Materi berhasil dihapus' });
-                    this.getAllMateri();
-                }
-            })
-    }
-
-    handleOpenMateri(id_materi: number) {
-        this._materiService
-            .getById(id_materi)
-            .pipe(takeUntil(this.Destroy$))
-            .subscribe((result) => {
-                if (result.status) {
-                    const link = document.createElement("a");
-                    const blob = new Blob([Uint8Array.from(atob(result.data.file_base_64!), (c) => c.charCodeAt(0))], { type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' });
-                    const url = URL.createObjectURL(blob);
-                    link.href = url;
-                    link.download = result.data.file_name;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                }
-            })
     }
 }
