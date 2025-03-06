@@ -30,7 +30,7 @@ const routes: Routes = [
     {
         canActivate: [AuthGuard],
         path: 'tugas',
-        loadComponent: async () => (await import('./pages/kuis/kuis.component')).KuisComponent,
+        loadComponent: async () => (await import('./pages/tugas/tugas.component')).TugasComponent,
     },
     {
         canActivate: [AuthGuard],
