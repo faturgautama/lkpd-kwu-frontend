@@ -1,17 +1,12 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MainComponent } from 'src/app/components/layout/main/main.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
-import { Subject, takeUntil } from 'rxjs';
-import { MateriService } from 'src/app/services/materi.service';
-import { AuthenticationService } from 'src/app/services/authentication.service';
-import { MateriModel } from 'src/app/model/materi.model';
+import { Subject } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { KelasService } from 'src/app/services/kelas.service';
-import { KelasModel } from 'src/app/model/kelas.model';
-import { MessageService } from 'primeng/api';
+import { Howl, Howler } from 'howler';
 
 @Component({
     selector: 'app-materi',
@@ -32,6 +27,8 @@ export class MateriComponent implements OnInit, AfterViewInit, OnDestroy {
 
     Destroy$ = new Subject();
 
+    StartSound = false;
+
     MateriDatasource: any[] = [
         { id: 0, path: '../../../assets/materi/1.jpg' },
         { id: 1, path: '../../../assets/materi/2.jpg' },
@@ -51,6 +48,11 @@ export class MateriComponent implements OnInit, AfterViewInit, OnDestroy {
     SelectedMateri: any = this.MateriDatasource[0];
     SelectedMateriIndex: number = 0;
 
+    Sound = new Howl({
+        src: ['../../../../assets/voice/voice-background.mp3'],
+        loop: false,
+    });
+
     constructor() { }
 
     ngOnInit(): void {
@@ -58,10 +60,17 @@ export class MateriComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-
+        setTimeout(() => {
+            if (!this.StartSound) {
+                this.StartSound = true;
+                this.Sound.play();
+            };
+        }, 1500);
     }
 
     ngOnDestroy(): void {
+        this.StartSound = false;
+        this.Sound.stop();
         this.Destroy$.next(0);
         this.Destroy$.complete();
     }
