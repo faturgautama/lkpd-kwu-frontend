@@ -444,23 +444,67 @@
                     <p class="text-lg font-semibold text-gray-700">
                         Petunjuk Penggunaan
                     </p>
-                    <p class="text-sm text-gray-600">
-                        Petunjuk penggunaan E-Module Mobile
+                </div>
+
+                <div class="flex flex-col w-full p-3">
+                    <h5 class="mb-0">Selamat datang di aplikasi e-modul “Melakukan Komunikasi melalui Telepon”!</h5>
+                    <p class="text-sm">
+                        Aplikasi ini dirancang untuk membantu siswa dalam memahami dan menguasai keterampilan komunikasi
+                        telepon yang sesuai dengan tuntutan di dunia kerja.
+                        Ikuti petunjuk berikut untuk menggunakan aplikasi ini secara optimal.
+                    </p>
+
+                    <h5 class="mb-0">Petunjuk Penggunaan</h5>
+                    <ol class="text-sm">
+                        <li><strong>Masuk (Sign in)</strong>: Setelah membuka aplikasi, Anda akan diarahkan untuk
+                            memilih jenis pengguna (Guru atau Siswa) dan mengisi email serta kata sandi.</li>
+                        <li><strong>Navigasi</strong>: Gunakan menu navigasi untuk berpindah antara kuis, materi, dan
+                            fitur lainnya.</li>
+                        <li><strong>Kuis</strong>: Kerjakan kuis awal (pre test) sebelum membaca materi untuk menguji
+                            kesiapan Anda dalam belajar.</li>
+                        <li><strong>Materi</strong>: Materi disajikan dalam format teks, gambar, dan video untuk
+                            memudahkan pemahaman.</li>
+                        <li><strong>Referensi</strong>: Gunakan fitur referensi untuk melihat simulasi panggilan telepon
+                            dengan berbagai skenario.</li>
+                        <li><strong>Tugas</strong>: Kerjakan tugas sebagai tugas akhir (post test) untuk mengukur
+                            pemahaman Anda.</li>
+                        <li><strong>Profil</strong>: Anda dapat mengetahui lebih lanjut mengenai aplikasi e-modul ini
+                            pada menu profil.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div *ngIf="SelectedMenuProfile.id == 'fitur'" class="flex flex-col justify-between w-full items-center">
+                <!-- Title -->
+                <div class="flex flex-col w-full ">
+                    <p class="text-lg font-semibold text-gray-700">
+                        Fitur Aplikasi
                     </p>
                 </div>
 
                 <div class="flex flex-col w-full p-3">
-                    <p class="text-sm text-gray-600 text-justify">
-                        Aplikasi ini dirancang dan dikembangkan untuk memfasilitasi siswa dalam mendukung proses
-                        pembelajaran di kelas.
-                        <br>
-                        <br>
-                        Aplikasi ini dirujukkan untuk guru dan siswa SMK.
-                        Namun, aplikasi versi pertama yang dikembangkan baru sebatas materi yang akan dipelajari.
+                    <h5 class="mb-0">Aplikasi e-modul “Melakukan Komunikasi melalui Telepon”</h5>
+                    <p class="text-sm">
+                        Aplikasi ini dilengkapi dengan berbagai fitur yang dirancang untuk meningkatkan pengalaman
+                        belajar siswa.
                     </p>
+
+                    <h5 class="mb-0">Fitur Unggulan</h5>
+                    <ul class="text-sm">
+                        <li><strong>Materi interaktif</strong>: Materi pembelajaran disajikan dalam format yang menarik
+                            dan interaktif, termasuk teks, gambar, dan video simulasi.</li>
+                        <li><strong>Kuis evaluasi</strong>: Kuis pada akhir materi membantu siswa mengukur pemahaman dan
+                            mengidentifikasi bagian yang perlu ditingkatkan.</li>
+                        <li><strong>Simulasi telepon</strong>: Fitur simulasi memungkinkan siswa berlatih melakukan
+                            panggilan telepon dalam berbagai situasi, seperti menerima panggilan, melakukan panggilan
+                            keluar, dan menangani keluhan pelanggan.</li>
+                        <li><strong>Tampilan responsif</strong>: Aplikasi ini dirancang untuk berfungsi dengan baik pada
+                            berbagai perangkat, termasuk smartphone dan tablet.</li>
+                    </ul>
                 </div>
             </div>
 
+            <!-- Tentang Aplikasi -->
             <div *ngIf="SelectedMenuProfile.id == 'tentang_aplikasi'"
                 class="flex flex-col justify-between w-full items-center">
                 <!-- Title -->
@@ -468,49 +512,30 @@
                     <p class="text-lg font-semibold text-gray-700">
                         Tentang Aplikasi
                     </p>
-                    <p class="text-sm text-gray-600">
-                        Tentang aplikasi E-Module Mobile
-                    </p>
-                </div>
-
-                <div class="flex flex-col w-full p-3">
-                    <p class="text-sm text-gray-600 text-justify">
-                        Aplikasi ini dirancang dan dikembangkan untuk memfasilitasi siswa dalam mendukung proses
-                        pembelajaran di kelas.
-                        <br>
-                        <br>
-                        Aplikasi ini dirujukkan untuk guru dan siswa SMK.
-                        Namun, aplikasi versi pertama yang dikembangkan baru sebatas materi yang akan dipelajari.
-                    </p>
-                </div>
-            </div>
-
-            <!-- FITUR -->
-            <div *ngIf="SelectedMenuProfile.id == 'fitur'" class="flex flex-col justify-between w-full items-center">
-                <!-- Title -->
-                <div class="flex flex-col w-full ">
-                    <p class="text-lg font-semibold text-gray-700">
-                        Fitur
-                    </p>
-                    <p class="text-sm text-gray-600">
-                        Fitur Utama E-Module Mobile
-                    </p>
                 </div>
 
                 <div class="flex flex-col w-full p-3">
                     <p class="text-sm text-gray-600 text-justify mb-2">
-                        Pertama, fitur Input Referensi dan Input Nilai. Fitur ini ditunjukkan kepada guru
-                        dapat mengunggah link referensi materi pembelajaran dalam bentuk link youtube, dan Nilai dapat
-                        dilakukan dengan
-                        ketik manual nilai tugas dan nilai kuis akan dihitung secara otomatis berdasarkan jawaban yang
-                        dipilih oleh Siswa.
+                        Aplikasi e-modul ini disusun berdasarkan Keputusan Menteri Keuangan nomor 109 tahun 2024
+                        tentang Penetapan SKKNI Kategori Aktivitas Penyewaan dan Sewa Guna Tanpa Hak Opsi,
+                        Ketenagakerjaan, dan Penunjang Usaha Lainnya Golongan Pokok Aktivitas Administrasi Kantor,
+                        Aktivitas Penunjang Kantor, dan Aktivitas Penunjang Usaha Lainnya Bidang Administratif
+                        Profesional.
                     </p>
 
                     <p class="text-sm text-gray-600 text-justify mb-2">
-                        Kedua, fitur Kuis, Materi, Tugas, dan Referensi. Fitur yang digunakan oleh siswa dapat
-                        mengakses materi dengan bentuk file ppt, tugas yang telah dikerjakan dapat dikerjakan secara
-                        bersamaan oleh teman sebangku, kuis dapat dikerjakan oleh siswa secara individu dan referensi
-                        dapat diakses pada link yang telah diberikan oleh guru.
+                        Kode Unit : N.82ADM00.029.3
+                        Judul Unit : Melakukan Komunikasi melalui Telepon
+                        Unit kompetensi ini berhubungan dengan pengetahuan, keterampilan, dan sikap kerja yang
+                        dibutuhkan dalam menjawab telepon, melakukan panggilan telepon, dan menangani pesan melalui
+                        telepon.
+                    </p>
+
+                    <p class="text-sm text-gray-600 text-justify mb-2">
+                        Aplikasi ini dirancang sebagai media pembelajaran untuk membantu siswa mengembangkan
+                        keterampilan komunikasi telepon yang efektif. Aplikasi ini mencakup materi, kuis, dan simulasi
+                        yang dirancang untuk membantu siswa memahami dan menguasa keterampilan komunikasi telepon yang
+                        penting dalam menghadapi tantangan dunia kerja.
                     </p>
                 </div>
             </div>
