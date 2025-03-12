@@ -8,14 +8,12 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
-import { of, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { MainComponent } from 'src/app/components/layout/main/main.component';
 import { KelasModel } from 'src/app/model/kelas.model';
-import { KuisModel } from 'src/app/model/kuis.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { KelasService } from 'src/app/services/kelas.service';
 import { KuisService } from 'src/app/services/kuis.service';
-import { environment } from 'src/environments/environment';
 import { SiswaService } from 'src/app/services/siswa.service';
 import { Router } from '@angular/router';
 
@@ -23,6 +21,7 @@ import { Router } from '@angular/router';
     selector: 'app-kuis',
     standalone: true,
     imports: [
+        FormsModule,
         CommonModule,
         MainComponent,
         FormsModule,
@@ -48,9 +47,9 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
     IsGuru = false;
 
     KelasDatasource: KelasModel.IKelas[] = [];
+    SelectedKelas: any;
 
     SiswaDatasource: any[] = [];
-
     SelectedSiswa: any;
 
     Kuis: any;
@@ -177,7 +176,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             })
     }
 
-    private getAllKuis() {
+    getAllKuis() {
         this.Profile$
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
@@ -200,21 +199,23 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.SelectedIndexPertanyaan = JSON.parse(localStorage.getItem("_LKPD_QSSI_") as any);
                     }
                 } else {
-                    query.id_kelas = 1;
-                    query.id_siswa = 1;
+                    query.id_kelas = this.SelectedKelas;
+                    query.id_siswa = this.SelectedSiswa;
                     query.kategori = this.KategoriKuis;
                 }
 
-                this._kuisService
-                    .getAll(query)
-                    .pipe(takeUntil(this.Destroy$))
-                    .subscribe((result) => {
-                        if (result.status) {
-                            if (result.data.length) {
-                                this.getDetailKuis(result.data[0].id_kuis, query.id_siswa);
+                if (query.id_kelas && query.id_siswa && query.kategori) {
+                    this._kuisService
+                        .getAll(query)
+                        .pipe(takeUntil(this.Destroy$))
+                        .subscribe((result) => {
+                            if (result.status) {
+                                if (result.data.length) {
+                                    this.getDetailKuis(result.data[0].id_kuis, query.id_siswa);
+                                }
                             }
-                        }
-                    })
+                        })
+                }
             })
     }
 

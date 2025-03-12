@@ -1,95 +1,124 @@
 <app-main>
-    <div *ngIf="Kuis" class="flex flex-row w-full gap-3 py-3 px-5">
-        <!-- List Pertanyaan -->
-        <div class="w-2/12 flex flex-col gap-2">
-            <div *ngFor="let item of Kuis.pertanyaan; let i = index"
-                class="flex flex-row justify-center w-full {{ SelectedIndexPertanyaan == i ? 'bg-orange-200 border border-solid border-white' : 'bg-gray-200' }} rounded-md drop-shadow py-1"
-                (click)="handleClickSoal(item, i)">
-                <p class="{{ SelectedIndexPertanyaan == i  ? 'text-orange-600' : 'text-gray-500' }} text-xs">
-                    Soal Nomor {{ i+1 }}
-                </p>
+    <div class="flex flex-col w-full">
+        <div *ngIf="IsGuru" class="flex flex-row gap-3 w-full px-5 mt-2">
+            <!-- Dropdown Kelas -->
+            <div class="grid w-2/12">
+                <p-dropdown styleClass="p-inputtext-sm w-full" placeholder="Pilih Kelas" [options]="KelasDatasource"
+                    optionLabel="kelas" optionValue="id_kelas" appendTo="body" [filter]="true"
+                    [(ngModel)]="SelectedKelas" (onChange)="handleChangeKelas($event)">
+                </p-dropdown>
+            </div>
+
+            <!-- Dropdown Siswa -->
+            <div class="grid w-2/12">
+                <p-dropdown styleClass="p-inputtext-sm w-full" placeholder="Pilih Siswa" [options]="SiswaDatasource"
+                    optionLabel="nama_lengkap" optionValue="id_siswa" appendTo="body" [filter]="true"
+                    [(ngModel)]="SelectedSiswa" [disabled]="!SelectedKelas" (onChange)="getAllKuis()">
+                </p-dropdown>
             </div>
         </div>
 
-        <!-- List Pertanyaan -->
-        <div class="w-10/12 flex flex-col gap-2 bg-white rounded-lg p-3">
-            <div class="flex items-center w-full p-2 mb-0">
-                <div class="w-3/12"></div>
-
-                <div
-                    class="flex w-3/12 p-2 mx-auto rounded-xl items-center justify-center bg-orange-200 text-orange-600 border border-solid border-white">
-                    <p class="text-base font-semibold text-center">
-                        {{ Kuis.judul }}
+        <div *ngIf="Kuis" class="flex flex-row w-full gap-3 py-3 px-5">
+            <!-- List Pertanyaan -->
+            <div class="w-2/12 flex flex-col gap-2">
+                <div *ngFor="let item of Kuis.pertanyaan; let i = index"
+                    class="flex flex-row justify-center w-full {{ SelectedIndexPertanyaan == i ? 'bg-orange-200 border border-solid border-white' : 'bg-gray-200' }} rounded-md drop-shadow py-1"
+                    (click)="handleClickSoal(item, i)">
+                    <p class="{{ SelectedIndexPertanyaan == i  ? 'text-orange-600' : 'text-gray-500' }} text-xs">
+                        Soal Nomor {{ i+1 }}
                     </p>
                 </div>
+            </div>
 
-                <div class="flex flex-row items-center gap-2">
-                    <p class="text-sm text-gray-700 font-semibold">
-                        Skor Anda
-                    </p>
+            <!-- List Pertanyaan -->
+            <div class="w-10/12 flex flex-col gap-2 bg-white rounded-lg p-3">
+                <div class="flex items-center w-full p-2 mb-0">
+                    <div class="w-3/12"></div>
+
                     <div
-                        class="flex flex-col px-2 py-1 mx-auto rounded-lg items-center justify-center {{ Kuis.skor > 0 && Kuis.skor < 70 ? 'bg-red-200 text-red-600' : 'bg-emerald-200 text-emerald-600' }} border border-solid border-white">
-                        <p class="text-sm font-bold text-center">
-                            {{ Kuis.skor }}
+                        class="flex w-3/12 p-2 mx-auto rounded-xl items-center justify-center bg-orange-200 text-orange-600 border border-solid border-white">
+                        <p class="text-base font-semibold text-center">
+                            {{ Kuis.judul }}
+                        </p>
+                    </div>
+
+                    <div class="flex flex-row items-center gap-2">
+                        <p class="text-sm text-gray-700 font-semibold">
+                            Skor {{ IsGuru ? 'siswa' : 'anda' }}
+                        </p>
+                        <div
+                            class="flex flex-col px-2 py-1 mx-auto rounded-lg items-center justify-center {{ Kuis.skor > 0 && Kuis.skor < 70 ? 'bg-red-200 text-red-600' : 'bg-emerald-200 text-emerald-600' }} border border-solid border-white">
+                            <p class="text-sm font-bold text-center">
+                                {{ Kuis.skor }}
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <p *ngIf="SelectedPertanyaan"
+                    class="text-sm text-gray-800 font-semibold text-justify leading-none mb-2">
+                    {{ SelectedIndexPertanyaan + 1 }}. {{ SelectedPertanyaan.pertanyaan }}
+                </p>
+
+                <div *ngIf="SelectedPertanyaan" class="flex flex-col gap-3">
+                    <div class="flex items-center">
+                        <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="A"
+                            [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_a" />
+                        <p for="option_a"
+                            class="ml-2 text-sm 
+                            {{ Kuis.skor > 0 && SelectedPertanyaan.correct == 'A' ? 'text-emerald-600'  : 'text-gray-700'}}">
+                            {{ SelectedPertanyaan.option_a }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center">
+                        <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="B"
+                            [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_b" />
+                        <p for="option_b"
+                            class="ml-2 text-sm 
+                        {{ Kuis.skor > 0 && SelectedPertanyaan.correct == 'B' ? 'text-emerald-600'  : 'text-gray-700'}}">
+                            {{ SelectedPertanyaan.option_b }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center">
+                        <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="C"
+                            [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_c" />
+                        <p for="option_c"
+                            class="ml-2 text-sm 
+                        {{ Kuis.skor > 0 && SelectedPertanyaan.correct == 'C' ? 'text-emerald-600'  : 'text-gray-700'}}">
+                            {{ SelectedPertanyaan.option_c }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center">
+                        <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="D"
+                            [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_d" />
+                        <p for="option_d"
+                            class="ml-2 text-sm 
+                        {{ Kuis.skor > 0 && SelectedPertanyaan.correct == 'D' ? 'text-emerald-600'  : 'text-gray-700'}}">
+                            {{ SelectedPertanyaan.option_d }}
                         </p>
                     </div>
                 </div>
 
-            </div>
+                <div *ngIf="SelectedPertanyaan"
+                    class="flex flex-row {{ SelectedIndexPertanyaan == 0 ? 'justify-end' : 'justify-between'}} mt-auto">
+                    <p-button *ngIf="SelectedIndexPertanyaan > 0" severity="secondary" styleClass="p-button-sm"
+                        icon="pi pi-chevron-left" (onClick)="handleNextPrevSoal('prev')">
+                    </p-button>
 
-            <p *ngIf="SelectedPertanyaan" class="text-sm text-gray-800 font-semibold text-justify leading-none mb-2">
-                {{ SelectedIndexPertanyaan + 1 }}. {{ SelectedPertanyaan.pertanyaan }}
-            </p>
+                    <p-button *ngIf=" SelectedIndexPertanyaan !=Kuis.pertanyaan.length - 1" severity="secondary"
+                        styleClass="p-button-sm" icon="pi pi-chevron-right" (onClick)="handleNextPrevSoal('next')">
+                    </p-button>
 
-            <div *ngIf="SelectedPertanyaan" class="flex flex-col gap-3">
-                <div class="flex items-center">
-                    <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="A"
-                        [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_a" />
-                    <p for="option_a" class="ml-2 text-sm text-gray-700">
-                        {{ SelectedPertanyaan.option_a }}
-                    </p>
+                    <p-button
+                        *ngIf="SelectedIndexPertanyaan == Kuis.pertanyaan.length - 1 && !SelectedPertanyaan.id_jawaban"
+                        severity="info" styleClass="p-button-sm" icon="pi pi-save" label="Simpan"
+                        (click)="handleSubmitPertanyaan(Kuis)">
+                    </p-button>
                 </div>
-
-                <div class="flex items-center">
-                    <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="B"
-                        [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_b" />
-                    <p for="option_b" class="ml-2 text-sm text-gray-700">
-                        {{ SelectedPertanyaan.option_b }}
-                    </p>
-                </div>
-
-                <div class="flex items-center">
-                    <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="C"
-                        [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_c" />
-                    <p for="option_c" class="ml-2 text-sm text-gray-700">
-                        {{ SelectedPertanyaan.option_c }}
-                    </p>
-                </div>
-
-                <div class="flex items-center">
-                    <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="D"
-                        [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_d" />
-                    <p for="option_d" class="ml-2 text-sm text-gray-700">
-                        {{ SelectedPertanyaan.option_d }}
-                    </p>
-                </div>
-            </div>
-
-            <div *ngIf="SelectedPertanyaan"
-                class="flex flex-row {{ SelectedIndexPertanyaan == 0 ? 'justify-end' : 'justify-between'}} mt-auto">
-                <p-button *ngIf="SelectedIndexPertanyaan > 0" severity="secondary" styleClass="p-button-sm"
-                    icon="pi pi-chevron-left" (onClick)="handleNextPrevSoal('prev')">
-                </p-button>
-
-                <p-button *ngIf=" SelectedIndexPertanyaan !=Kuis.pertanyaan.length - 1" severity="secondary"
-                    styleClass="p-button-sm" icon="pi pi-chevron-right" (onClick)="handleNextPrevSoal('next')">
-                </p-button>
-
-                <p-button
-                    *ngIf="SelectedIndexPertanyaan == Kuis.pertanyaan.length - 1 && !SelectedPertanyaan.id_jawaban"
-                    severity="info" styleClass="p-button-sm" icon="pi pi-save" label="Simpan"
-                    (click)="handleSubmitPertanyaan(Kuis)">
-                </p-button>
             </div>
         </div>
     </div>
