@@ -231,8 +231,11 @@ export class TugasComponent implements OnInit, AfterViewInit, OnDestroy {
                             ...item,
                             jawaban: item.id_jawaban ? item.jawaban : '',
                             audio: "",
+                            type: item.correct == '-' ? 'audio' : 'choice'
                         }
                     });
+
+                    console.log("pertanyaan =>", result.data.pertanyaan);
 
                     this.Kuis = result.data;
                 }

@@ -1,7 +1,7 @@
 <app-main>
-    <div *ngIf="Kuis" class="flex flex-row w-full gap-3 py-3 px-5">
+    <div *ngIf="Kuis" class="flex flex-row items-start w-full gap-3 py-3 px-5">
         <!-- List Pertanyaan -->
-        <div class="w-2/12 flex flex-col gap-2">
+        <div class="w-2/12 flex flex-col gap-2 overflow-x-auto p-2" style="max-height: calc(100vh - 6rem);">
             <div *ngFor="let item of Kuis.pertanyaan; let i = index"
                 class="flex flex-row justify-center w-full {{ SelectedIndexPertanyaan == i ? 'bg-orange-200 border border-solid border-white' : 'bg-gray-200' }} rounded-md drop-shadow py-1"
                 (click)="handleClickSoal(item, i)">
@@ -42,12 +42,43 @@
             </p>
 
             <div *ngIf="SelectedPertanyaan" class="flex flex-col gap-3">
-                <div *ngIf="!handleGetVoiceNoteSoal(SelectedPertanyaan)" class="flex items-center">
-                    <textarea rows="5" placeholder="Input jawaban Anda disini" pInputTextarea
-                        class="p-inputtext-sm w-full" [(ngModel)]="SelectedPertanyaan.jawaban"></textarea>
+                <!-- Pilihan Ganda -->
+                <div *ngIf="SelectedPertanyaan.type == 'choice'" class="flex flex-col gap-3">
+                    <div class="flex items-center">
+                        <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="A"
+                            [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_a" />
+                        <p for="option_a" class="ml-2 text-sm text-gray-700">
+                            {{ SelectedPertanyaan.option_a }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center">
+                        <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="B"
+                            [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_b" />
+                        <p for="option_b" class="ml-2 text-sm text-gray-700">
+                            {{ SelectedPertanyaan.option_b }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center">
+                        <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="C"
+                            [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_c" />
+                        <p for="option_c" class="ml-2 text-sm text-gray-700">
+                            {{ SelectedPertanyaan.option_c }}
+                        </p>
+                    </div>
+
+                    <div class="flex items-center">
+                        <p-radioButton [name]="SelectedPertanyaan.id_kuis" value="D"
+                            [(ngModel)]="SelectedPertanyaan.jawaban" inputId="option_d" />
+                        <p for="option_d" class="ml-2 text-sm text-gray-700">
+                            {{ SelectedPertanyaan.option_d }}
+                        </p>
+                    </div>
                 </div>
 
-                <div *ngIf="handleGetVoiceNoteSoal(SelectedPertanyaan)" class="flex w-full items-center">
+                <!-- Audio -->
+                <div *ngIf="SelectedPertanyaan.type == 'audio'" class="flex w-full items-center">
                     <div *ngIf="!SelectedPertanyaan.jawaban" class="voice-note flex gap-2 mb-2">
                         <p-button severity="info" label="🎙️ Mulai Merekam" styleClass="p-button-sm"
                             (click)="startRecording()" [disabled]="isRecording">
