@@ -66,4 +66,8 @@ export class KuisService {
     penilaianJawaban(data: any): Observable<HttpBaseResponse> {
         return this._httpOperationService.putRequest(`${environment.apiUrl}/kuis/penilaian-jawaban`, data);
     }
+
+    updateNilaiTugas(data: any): Observable<HttpBaseResponse> {
+        return this._httpOperationService.putRequest(`${environment.apiUrl}/kuis/nilai-tugas`, data);
+    }
 }

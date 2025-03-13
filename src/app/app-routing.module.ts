@@ -34,6 +34,11 @@ const routes: Routes = [
     },
     {
         canActivate: [AuthGuard],
+        path: 'simulasi',
+        loadComponent: async () => (await import('./pages/simulasi/simulasi.component')).SimulasiComponent,
+    },
+    {
+        canActivate: [AuthGuard],
         path: 'profile',
         loadComponent: async () => (await import('./pages/profile/profile.component')).ProfileComponent,
     }

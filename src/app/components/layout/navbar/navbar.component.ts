@@ -28,6 +28,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         { path: 'materi', caption: 'Materi' },
         { path: 'referensi', caption: 'Referensi' },
         { path: 'tugas', caption: 'Tugas' },
+        { path: 'simulasi', caption: 'Simulasi' },
         { path: 'profile', caption: 'Profil' },
     ];
 

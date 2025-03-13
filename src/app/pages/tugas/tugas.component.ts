@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -31,7 +32,8 @@ import { VoiceNoteService } from 'src/app/services/voice-note.service'
         ButtonModule,
         InputTextareaModule,
         RadioButtonModule,
-        CalendarModule
+        CalendarModule,
+        InputNumberModule,
     ],
     templateUrl: './tugas.component.html',
     styleUrl: './tugas.component.scss'
@@ -47,9 +49,9 @@ export class TugasComponent implements OnInit, AfterViewInit, OnDestroy {
     IsGuru = false;
 
     KelasDatasource: KelasModel.IKelas[] = [];
+    SelectedKelas: any;
 
     SiswaDatasource: any[] = [];
-
     SelectedSiswa: any;
 
     Kuis: any;
@@ -127,6 +129,8 @@ export class TugasComponent implements OnInit, AfterViewInit, OnDestroy {
 
     isRecording = false;
 
+    Nilai = 0;
+
     constructor(
         private _router: Router,
         private _formBuilder: FormBuilder,
@@ -179,7 +183,7 @@ export class TugasComponent implements OnInit, AfterViewInit, OnDestroy {
             })
     }
 
-    private getAllKuis() {
+    getAllKuis() {
         this.Profile$
             .pipe(takeUntil(this.Destroy$))
             .subscribe((result) => {
@@ -202,21 +206,23 @@ export class TugasComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.SelectedIndexPertanyaan = JSON.parse(localStorage.getItem("_LKPD_QSSI_") as any);
                     }
                 } else {
-                    query.id_kelas = 1;
-                    query.id_siswa = 1;
+                    query.id_kelas = this.SelectedKelas;
+                    query.id_siswa = this.SelectedSiswa;
                     query.kategori = this.KategoriKuis;
                 }
 
-                this._kuisService
-                    .getAll(query)
-                    .pipe(takeUntil(this.Destroy$))
-                    .subscribe((result) => {
-                        if (result.status) {
-                            if (result.data.length) {
-                                this.getDetailKuis(result.data[0].id_kuis, query.id_siswa);
+                if (query.id_kelas && query.id_siswa && query.kategori) {
+                    this._kuisService
+                        .getAll(query)
+                        .pipe(takeUntil(this.Destroy$))
+                        .subscribe((result) => {
+                            if (result.status) {
+                                if (result.data.length) {
+                                    this.getDetailKuis(result.data[0].id_kuis, query.id_siswa);
+                                }
                             }
-                        }
-                    })
+                        })
+                }
             })
     }
 
@@ -234,8 +240,6 @@ export class TugasComponent implements OnInit, AfterViewInit, OnDestroy {
                             type: item.correct == '-' ? 'audio' : 'choice'
                         }
                     });
-
-                    console.log("pertanyaan =>", result.data.pertanyaan);
 
                     this.Kuis = result.data;
                 }
@@ -489,5 +493,24 @@ export class TugasComponent implements OnInit, AfterViewInit, OnDestroy {
         const audioBase64 = await this._recorderService.stopRecording();
         data.jawaban = audioBase64;
         this.SelectedPertanyaan = data;
+    }
+
+    handleUpdateNilai(nilai: any) {
+        const payload = {
+            id_kuis: this.Kuis.id_kuis,
+            id_siswa: this.SelectedSiswa,
+            nilai: nilai
+        };
+
+        this._kuisService
+            .updateNilaiTugas(payload)
+            .pipe(takeUntil(this.Destroy$))
+            .subscribe((result) => {
+                if (result.status) {
+                    this._messageService.clear();
+                    this._messageService.add({ severity: 'success', summary: 'Berhasil', detail: 'Nilai berhasil disimpan' });
+                    this.handleChangeSiswa({ value: this.SelectedSiswa })
+                }
+            });
     }
 }
