@@ -60,7 +60,7 @@ export class SimulasiComponent implements OnInit, AfterViewInit, OnDestroy {
     SimulasiSections = [
         { label: 'Petunjuk Pengerjaan', value: 'petunjuk_pengerjaan' },
         { label: 'Bahan Dan Alat', value: 'bahan_dan_alat' },
-        { label: 'Hasil Yang Diharapkan', value: 'hasil_yang_diharapkan' },
+        { label: 'Hasil Yg Diharapkan', value: 'hasil_yang_diharapkan' },
         { label: 'Ilustrasi', value: 'ilustrasi' },
         { label: 'Jawaban Simulasi', value: 'jawaban_simulasi' },
     ];
@@ -161,6 +161,23 @@ export class SimulasiComponent implements OnInit, AfterViewInit, OnDestroy {
                                     if (this.IsGuru) {
                                         this.Nilai = result.data.jawaban_simulasi.nilai;
                                     }
+
+                                    this.SimulasiSections = [
+                                        { label: 'Petunjuk Pengerjaan', value: 'petunjuk_pengerjaan' },
+                                        { label: 'Bahan Dan Alat', value: 'bahan_dan_alat' },
+                                        { label: 'Hasil Yg Diharapkan', value: 'hasil_yang_diharapkan' },
+                                        { label: 'Ilustrasi', value: 'ilustrasi' },
+                                        { label: 'Jawaban Simulasi', value: 'jawaban_simulasi' },
+                                        { label: 'Upload Video', value: 'video_youtube' },
+                                    ];
+                                } else {
+                                    this.SimulasiSections = [
+                                        { label: 'Petunjuk Pengerjaan', value: 'petunjuk_pengerjaan' },
+                                        { label: 'Bahan Dan Alat', value: 'bahan_dan_alat' },
+                                        { label: 'Hasil Yg Diharapkan', value: 'hasil_yang_diharapkan' },
+                                        { label: 'Ilustrasi', value: 'ilustrasi' },
+                                        { label: 'Jawaban Simulasi', value: 'jawaban_simulasi' },
+                                    ];
                                 }
                             }
                         })

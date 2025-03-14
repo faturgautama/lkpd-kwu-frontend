@@ -37,10 +37,10 @@
             <!-- List Section -->
             <div class="w-2/12 flex flex-col gap-2 overflow-x-auto p-2" style="max-height: calc(100vh - 6rem);">
                 <div *ngFor="let item of SimulasiSections; let i = index"
-                    class="flex flex-row justify-center w-full {{ SelectedSimulasiSections == item.value ? 'bg-orange-200 border border-solid border-white' : 'bg-gray-200' }} rounded-md drop-shadow py-1"
+                    class="flex flex-row justify-start w-full {{ SelectedSimulasiSections == item.value ? 'bg-orange-200 border border-solid border-white' : 'bg-gray-200' }} rounded-md drop-shadow py-1 pl-2"
                     (click)="handleClickSectionSimulasi(item.value)">
                     <p
-                        class="{{ SelectedSimulasiSections == item.value  ? 'text-orange-600' : 'text-gray-500' }} text-xs">
+                        class="{{ SelectedSimulasiSections == item.value  ? 'text-orange-600' : 'text-gray-500' }} text-xs text-start">
                         {{ item.label }}
                     </p>
                 </div>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
 
-                <p *ngIf="SelectedSimulasiSections != 'jawaban_simulasi'"
+                <p *ngIf="SelectedSimulasiSections != 'jawaban_simulasi' && SelectedSimulasiSections != 'video_youtube'"
                     class="text-sm text-gray-800 font-semibold text-justify leading-none mb-2"
                     [innerHTML]="SimulasiDatasource[SelectedSimulasiSections]">
                 </p>
@@ -223,10 +223,28 @@
                             </p>
                         </div>
                     </div>
-
                 </div>
 
                 <div *ngIf="SelectedSimulasiSections == 'jawaban_simulasi' && !IsGuru"
+                    class="flex flex-row justify-end mt-auto">
+                    <p-button severity="info" styleClass="p-button-sm" icon="pi pi-save" label="Simpan"
+                        (click)="handleSaveSimulasi(Form.value)">
+                    </p-button>
+                </div>
+
+                <div *ngIf="SelectedSimulasiSections == 'video_youtube'" [formGroup]="Form"
+                    class="flex flex-col w-full">
+                    <!-- Header -->
+                    <div class="flex flex-col w-full gap-2 grid-flow-col mb-3">
+                        <p class="text-sm text-gray-700 font-medium">
+                            Link Video Youtube
+                        </p>
+                        <input type="text" pInputText class="p-inputtext-sm w-full"
+                            formControlName="link_video_youtube">
+                    </div>
+                </div>
+
+                <div *ngIf="SelectedSimulasiSections == 'video_youtube' && !IsGuru"
                     class="flex flex-row justify-end mt-auto">
                     <p-button severity="info" styleClass="p-button-sm" icon="pi pi-save" label="Simpan"
                         (click)="handleSaveSimulasi(Form.value)">
