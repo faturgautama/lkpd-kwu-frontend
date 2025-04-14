@@ -109,7 +109,7 @@
                         icon="pi pi-chevron-left" (onClick)="handleNextPrevSoal('prev')">
                     </p-button>
 
-                    <p-button *ngIf=" SelectedIndexPertanyaan !=Kuis.pertanyaan.length - 1" severity="secondary"
+                    <p-button *ngIf="SelectedIndexPertanyaan !=Kuis.pertanyaan.length - 1" severity="secondary"
                         styleClass="p-button-sm" icon="pi pi-chevron-right" (onClick)="handleNextPrevSoal('next')">
                     </p-button>
 
@@ -120,6 +120,27 @@
                     </p-button>
                 </div>
             </div>
+
+            <!-- Dialog Reaksi -->
+            <p-dialog [showHeader]="false" [modal]="true" [(visible)]="ShowDialogApresiasi" [style]="{ width: '25rem' }"
+                [maximizable]="false" [draggable]="false">
+
+                <div *ngIf="Kuis.skor > 0 && Kuis.skor < 70"
+                    class="flex w-full items-center justify-center flex-col gap-2">
+                    <img src="../../../assets/image/good.png" alt="" class="h-[7rem]">
+                    <span class="text-sm text-gray-700 mb-2">Good Job, Berikutnya Harus Lebih Baik Lagi Ya!!</span>
+                </div>
+
+                <div *ngIf="Kuis.skor > 70" class="flex w-full  items-center justify-center flex-col gap-2">
+                    <img src="../../../assets/image/hebat.png" alt="" class="h-[7rem]">
+                    <span class="text-sm text-gray-700 mb-2">Good Job, Hebat</span>
+                </div>
+
+                <div class="flex justify-center gap-2 my-2">
+                    <p-button label="Tutup" severity="secondary" (onClick)="ShowDialogApresiasi = false"
+                        styleClass="p-button-sm" />
+                </div>
+            </p-dialog>
         </div>
     </div>
 </app-main>

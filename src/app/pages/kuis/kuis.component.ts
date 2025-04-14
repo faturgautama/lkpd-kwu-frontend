@@ -16,6 +16,7 @@ import { KelasService } from 'src/app/services/kelas.service';
 import { KuisService } from 'src/app/services/kuis.service';
 import { SiswaService } from 'src/app/services/siswa.service';
 import { Router } from '@angular/router';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
     selector: 'app-kuis',
@@ -31,7 +32,8 @@ import { Router } from '@angular/router';
         ButtonModule,
         InputTextareaModule,
         RadioButtonModule,
-        CalendarModule
+        CalendarModule,
+        DialogModule,
     ],
     templateUrl: './kuis.component.html',
     styleUrl: './kuis.component.scss'
@@ -125,6 +127,8 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
     SelectedPertanyaan: any;
     SelectedIndexPertanyaan!: number;
 
+    ShowDialogApresiasi = false;
+
     constructor(
         private _router: Router,
         private _formBuilder: FormBuilder,
@@ -211,7 +215,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
                         .subscribe((result) => {
                             if (result.status) {
                                 if (result.data.length) {
-                                    this.getDetailKuis(result.data[0].id_kuis, query.id_siswa);
+                                    this.getDetailKuis(result.data[0].id_kuis, query.id_siswa, true);
                                 }
                             }
                         })
@@ -219,7 +223,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
             })
     }
 
-    private getDetailKuis(id_kuis: any, id_siswa: any) {
+    private getDetailKuis(id_kuis: any, id_siswa: any, show_apresiasi?: boolean) {
         this._kuisService
             .getAnswerSiswa(id_kuis, id_siswa)
             .pipe(takeUntil(this.Destroy$))
@@ -233,6 +237,10 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
                     });
 
                     this.Kuis = result.data;
+
+                    if (show_apresiasi) {
+                        this.ShowDialogApresiasi = true;
+                    }
                 }
             })
     }
@@ -391,7 +399,7 @@ export class KuisComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (result.status) {
                     this._messageService.clear();
                     this._messageService.add({ severity: 'success', summary: 'Berhasil!', detail: 'Jawaban Berhasil Disimpan' });
-                    this.getDetailKuis(this.Kuis.id_kuis, userData.id_siswa);
+                    this.getDetailKuis(this.Kuis.id_kuis, userData.id_siswa, true);
                 }
             })
     }
