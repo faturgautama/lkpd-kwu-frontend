@@ -71,6 +71,11 @@ export class SimulasiComponent implements OnInit, AfterViewInit, OnDestroy {
 
     Form: FormGroup;
 
+    TypeJawaban: any[] = [
+        { label: 'LPT', value: 'lpt' },
+        { label: 'Block Note', value: 'block_note' },
+    ]
+
     constructor(
         private _router: Router,
         private _formBuilder: FormBuilder,
@@ -96,6 +101,7 @@ export class SimulasiComponent implements OnInit, AfterViewInit, OnDestroy {
             nama_penerima: ["", [Validators.required]],
             link_video_youtube: ["", [Validators.required]],
             nilai: [0, [Validators.required]],
+            type: ['', [Validators.required]]
         });
     }
 
